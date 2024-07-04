@@ -5,7 +5,7 @@ export function setCookie(cName: string, cValue: any, exdays: number = 400) {
   document.cookie = cName + "=" + cValue + ";" + expires + ";path=/";
 }
 
-function getCookie(cname: string) {
+export function getCookie(cname: string) {
   let name = cname + "=";
   let ca = document.cookie.split(";");
   for (let i = 0; i < ca.length; i++) {

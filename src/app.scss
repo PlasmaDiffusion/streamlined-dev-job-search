@@ -15,7 +15,6 @@ h5 {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 h3 {
@@ -31,4 +30,34 @@ li {
 }
 a {
   color: #42b983;
+}
+
+section {
+  margin-top: 16px;
+  margin-right: 4px;
+  margin-left: 4px;
+
+  outline: 1px dashed $primary;
+}
+
+h1 {
+  padding: 2rem;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.settings {
+  padding: 4px;
+  text-align: center;
+  display: flex;
+  align-content: center;
+  outline: 1px dashed grey;
+  input {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+.help {
+  color: $helpColour;
+  border-bottom: 1px dashed $helpColour;
 }

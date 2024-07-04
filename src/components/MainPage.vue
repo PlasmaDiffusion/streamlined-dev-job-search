@@ -1,7 +1,7 @@
 <script>
 export default {
   name: "MainPage",
-  components: { JobPostingForm },
+  components: { JobPostingForm, LinkForm, ListOfLinks },
   props: {
     msg: String,
   },
@@ -11,6 +11,8 @@ export default {
 <script setup>
 import JobPostingForm from "./JobPostingForm.vue";
 import { ref } from "vue";
+import LinkForm from "./SearchLinks/LinkForm.vue";
+import ListOfLinks from "./SearchLinks/ListOfLinks.vue";
 const helpChecked = ref(false);
 </script>
 
@@ -19,6 +21,10 @@ const helpChecked = ref(false);
     <h1>Streamlined Dev Job Searcher</h1>
     <JobPostingForm :showHelp="helpChecked" />
     <h2>Jobs Entered</h2>
+
+    <h2>Search Links</h2>
+    <LinkForm :showHelp="helpChecked" />
+    <ListOfLinks />
 
     <div class="settings">
       <p>Show Help</p>
