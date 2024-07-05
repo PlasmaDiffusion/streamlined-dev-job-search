@@ -38,15 +38,42 @@ export function loadLinks() {
   return linkArray;
 }
 
-export function removeLinkAtIndex(links: JobBoardLink[], index: number) {
+export function removeLinkAtIndex(indexToDelete: number) {
+  const links = loadLinks();
+  links.splice(indexToDelete, 1);
 
-  links.splice(index, 1);
 
-  links.forEach((link, index) => {
-    link.id = index;
-  });
+  for (let i = 0; i < links.length; i++) {
+    links[i].id = i;
+  }
 
   console.log("Deleted a link. Remaining links:", links);
-  setCookie('links', JSON.stringify(links));
+  setCookie("Links", JSON.stringify(links));
   return links;
+
+  // const newArray: JobBoardLink[] = [];
+
+  // for (let i = 0; i < links.length; i++) {
+  //   if (i !== indexNeeded) {
+  //     newArray.push(links[i]);
+  //   }
+  // }
+
+  // console.log("Deleted a link. Remaining links:", newArray);
+  // console
+  // setCookie("Links", JSON.stringify(newArray));
+  // return newArray;
+
+  // const newArray: JobBoardLink[] = [];
+
+  // for (let i = 0; i < links.length; i++) {
+  //   if (i !== indexNeeded) {
+  //     newArray.push(links[i]);
+  //   }
+  // }
+
+  // console.log("Deleted a link. Remaining links:", newArray);
+  // console
+  // setCookie("Links", JSON.stringify(newArray));
+  // return newArray;
 }

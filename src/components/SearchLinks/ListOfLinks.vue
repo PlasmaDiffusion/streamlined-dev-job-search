@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import { JobBoardLink, loadLinks } from "../../services/DataToSave";
 import LinkForm from "./LinkForm.vue";
-import { setCookie } from "../../services/CookieManager";
 import { removeLinkAtIndex } from "../../services/DataToSave";
 
 const links = ref<JobBoardLink[]>(loadLinks());
@@ -12,7 +11,7 @@ const editing = ref(-1);
 <template>
   <section>
     <h2 v-if="editing === -1">Quick Search Links</h2>
-    <div v-for="link in links" :key="link.id">
+    <div v-for="(link, index) in links" :key="link.id">
       <div
         v-if="editing === -1"
         class="category"
@@ -40,8 +39,7 @@ const editing = ref(-1);
           class="delete"
           :onclick="
             () => {
-              links = removeLinkAtIndex(links, link.id);
-              setCookie('links', JSON.stringify(links));
+              links = removeLinkAtIndex(index);
             }
           "
           >🗑</span
