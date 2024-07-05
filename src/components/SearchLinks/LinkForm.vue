@@ -1,28 +1,26 @@
-<script lang="ts">
-export default {
-  name: "LinkForm",
-  props: {
-    showHelp: Boolean,
-  },
-  mounted() {
-    loadLinks();
-  },
-};
-</script>
 <script setup lang="ts">
+const props = defineProps({
+  showHelp: { type: Boolean, required: true },
+  linkToEdit: { type: Object as () => JobBoardLink, required: false },
+});
+
 import "./ListOfLinks.scss";
 import { ref } from "vue";
 import { JobBoardLink, loadLinks } from "../../services/DataToSave";
 import { setCookie } from "../../services/CookieManager";
 
-const colour = ref("");
-const link = ref("");
-const displayName = ref("");
-const category = ref("");
-const isCompanySite = ref(false);
+const emit = defineEmits(["closed"]);
 
-function submit(event: any) {
+const colour = ref(props.linkToEdit?.colour || "");
+const link = ref(props.linkToEdit?.link || "");
+const displayName = ref(props.linkToEdit?.displayName || "");
+const category = ref(props.linkToEdit?.category || "");
+const isCompanySite = ref(props.linkToEdit?.isCompanySite || false);
+
+function submit(this: any, event: any) {
   event.preventDefault();
+  const links = loadLinks();
+
   const newLink: JobBoardLink = {
     link: link.value,
     displayName: displayName.value,
@@ -30,12 +28,19 @@ function submit(event: any) {
     colour: colour.value || "blue",
     isCompanySite: isCompanySite.value,
     timesClicked: 0,
+    id: props.linkToEdit?.id || -1,
   };
 
-  console.log(newLink);
-
-  const links = loadLinks();
-  links.push(newLink);
+  //Add a new link, or edit an old one. -1 will be the default id that then gets updated.
+  if (newLink?.id === -1) {
+    newLink.id = links.length;
+    links.push(newLink);
+  } else if (props.linkToEdit?.id && props.linkToEdit?.id >= 0) {
+    links[props.linkToEdit.id] = newLink;
+  } else {
+    alert("Negative link id. Cannot edit.");
+    return;
+  }
 
   setCookie("Links", JSON.stringify(links));
   location.reload();
@@ -44,7 +49,20 @@ function submit(event: any) {
 
 <template>
   <section>
-    <h2>Enter A Common Search Link</h2>
+    <h2 v-if="linkToEdit" :style="{ backgroundColor: colour }">
+      Edit {{ linkToEdit.displayName }} Link
+      <button
+        class="cancel"
+        :onclick="
+          () => {
+            emit('closed');
+          }
+        "
+      >
+        X
+      </button>
+    </h2>
+    <h2 v-else>Enter A Common Search Link</h2>
 
     <form @submit="submit">
       <label><b>Link</b></label>
@@ -85,6 +103,7 @@ function submit(event: any) {
 
       <br />
       <input type="submit" />
+      <p class="help">{{ props.linkToEdit?.id }}</p>
     </form>
 
     <div>

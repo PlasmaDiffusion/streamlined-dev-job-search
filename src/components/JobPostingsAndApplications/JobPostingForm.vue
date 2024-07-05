@@ -8,10 +8,10 @@ export default {
 </script>
 <script setup lang="ts">
 import "./JobPostingForm.scss";
-import { parseJobPosting } from "../services/ParseJobPosting";
+import { parseJobPosting } from "../../services/ParseJobPosting";
 import { ref } from "vue";
-import { Application } from "../services/DataToSave";
-import { setCookie } from "../services/CookieManager";
+import { Application } from "../../services/DataToSave";
+import { setCookie } from "../../services/CookieManager";
 
 const posting = ref("");
 const link = ref("");
@@ -24,6 +24,7 @@ function submit(event: Event) {
     linkOfPosting: "",
     sitePostingCameFrom: "",
     posting: "",
+    id: 0,
   };
   setCookie(
     newApplication.company + " " + newApplication.jobTitle,
