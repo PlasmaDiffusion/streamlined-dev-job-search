@@ -99,7 +99,7 @@ function submit(event: Event) {
       <br />
 
       <input v-model="tags" placeholder="Tag1, Tag2" />
-      <label class="help" v-if="tags"
+      <label class="help" v-if="showHelp"
         >^ Add tags for filtering later. You could enter
         <b>React, Tailwind</b> if the job involves that. Make sure to use commas
         and spaces to split them up.

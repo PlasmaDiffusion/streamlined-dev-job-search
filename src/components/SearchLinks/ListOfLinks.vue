@@ -22,14 +22,14 @@ const addingNewLink = ref(false);
       <div
         v-if="editing === -1"
         class="category"
-        :style="{ backgroundColor: link.colour }"
+        :style="{ color: link.colour }"
       >
         {{ link.category }}:
       </div>
       <div
         v-if="editing === -1 && !addingNewLink"
         class="linkSection"
-        :style="{ backgroundColor: link.colour }"
+        :style="{ color: link.colour }"
       >
         <span class="link">{{ link.displayName }}</span>
         <span class="timesClicked">(0 clicks) </span>
