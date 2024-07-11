@@ -7,6 +7,7 @@ h4,
 h5 {
   background-color: $primary;
   color: white;
+  border-radius: 4px;
 }
 
 #app {
@@ -28,9 +29,7 @@ li {
   display: inline-block;
   margin: 0 10px;
 }
-a {
-  color: #42b983;
-}
+
 
 section {
   margin-top: 16px;
@@ -38,6 +37,20 @@ section {
   margin-left: 4px;
 
   background-color:  $background2;
+  border-radius: 4px;
+}
+
+button, input[type="submit"] {
+  background-color:$primary;
+  color: white;
+  border-radius: 4px;
+  margin: 16px 0;
+  border: 2px ridge black;
+}
+
+button:hover, input[type="submit"]:hover {
+  background-color:$secondary;
+  color: $background2;
 }
 
 h1 {

@@ -31,26 +31,29 @@ const addingNewLink = ref(false);
         class="linkSection"
         :style="{ color: link.colour }"
       >
-        <span class="link">{{ link.displayName }}</span>
-        <span class="timesClicked">(0 clicks) </span>
-        <span
-          class="edit"
-          :onclick="
-            () => {
-              editing = link.id;
-            }
-          "
-          >✎</span
-        >
-        <span
-          class="delete"
-          :onclick="
-            () => {
-              links = removeLinkAtIndex(index);
-            }
-          "
-          >🗑</span
-        >
+          <div>
+            <span class="linkIcon">➤ </span>
+            <a class="link" :href="link.link">{{ link.displayName }}</a>
+            <span class="timesClicked"> (0 clicks) </span>
+            <span
+              class="edit"
+              :onclick="
+                () => {
+                  editing = link.id;
+                }
+              "
+              >✎</span
+            >
+            <span
+              class="delete"
+              :onclick="
+                () => {
+                  links = removeLinkAtIndex(index);
+                }
+              "
+              >🗑</span
+            >
+              </div>
       </div>
       <LinkForm
         v-if="editing === link.id"

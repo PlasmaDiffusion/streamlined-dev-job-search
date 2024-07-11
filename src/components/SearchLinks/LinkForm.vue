@@ -120,11 +120,10 @@ function submit(this: any, event: any) {
 
     <div>
       <p class>Preview</p>
-      <div class="category" :style="{ backgroundColor: colour }">
-        {{ category }}:
-      </div>
-      <div class="linkSection" :style="{ backgroundColor: colour }">
-        {{ displayName }} <span class="timesClicked">(0 clicks)</span>
+      <div class="category" :style="{ color: colour }">{{ category }}:</div>
+      <div class="linkSection" :style="{ color: colour }">
+        <span class="linkIcon">➤ </span><a :href=link>{{ displayName }}</a>
+        <span class="timesClicked"> (0 clicks)</span>
       </div>
     </div>
   </section>
