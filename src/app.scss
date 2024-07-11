@@ -37,7 +37,7 @@ section {
   margin-right: 4px;
   margin-left: 4px;
 
-  outline: 1px dashed $primary;
+  background-color:  $background2;
 }
 
 h1 {
@@ -58,6 +58,7 @@ h1 {
 }
 
 .help {
-  color: $helpColour;
-  border-bottom: 1px dashed $helpColour;
+  border-bottom: 1px dashed black;
+  margin-bottom: 32px;
+  margin-right: 16px;
 }

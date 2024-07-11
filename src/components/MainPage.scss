@@ -1,0 +1,19 @@
+@import "../variables.scss";
+
+
+.mainContainer
+{
+    display: flex;
+    background-color: $background;
+    border-radius: 4px;
+}
+
+#jobApplicationSection
+{
+    flex-grow: 2;
+}
+
+.linksSection {
+    width: 20rem;
+    margin: 4rem;
+}

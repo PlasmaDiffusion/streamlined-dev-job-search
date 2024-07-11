@@ -3,14 +3,21 @@ import { ref } from "vue";
 import { JobBoardLink, loadLinks } from "../../services/DataToSave";
 import LinkForm from "./LinkForm.vue";
 import { removeLinkAtIndex } from "../../services/DataToSave";
+defineProps({
+  showHelp: { type: Boolean, required: true },
+  forCompanySiteLinks: { type: Boolean, required: true },
+});
 
 const links = ref<JobBoardLink[]>(loadLinks());
 const editing = ref(-1);
+const addingNewLink = ref(false);
 </script>
 
 <template>
   <section>
-    <h2 v-if="editing === -1">Quick Search Links</h2>
+    <h2 v-if="editing === -1 && !addingNewLink">
+      {{ `Quick ${forCompanySiteLinks ? "Company Site" : "Job Board"} Links` }}
+    </h2>
     <div v-for="(link, index) in links" :key="link.id">
       <div
         v-if="editing === -1"
@@ -20,7 +27,7 @@ const editing = ref(-1);
         {{ link.category }}:
       </div>
       <div
-        v-if="editing === -1"
+        v-if="editing === -1 && !addingNewLink"
         class="linkSection"
         :style="{ backgroundColor: link.colour }"
       >
@@ -47,7 +54,7 @@ const editing = ref(-1);
       </div>
       <LinkForm
         v-if="editing === link.id"
-        :showHelp="false"
+        :showHelp="showHelp"
         :linkToEdit="link"
         @closed="
           () => {
@@ -56,5 +63,24 @@ const editing = ref(-1);
         "
       />
     </div>
+
+    <button
+      :onClick="
+        () => {
+          addingNewLink = true;
+        }
+      "
+    >
+      + New Link
+    </button>
+    <LinkForm
+      v-if="editing === -1 && addingNewLink"
+      :showHelp="showHelp"
+      @closed="
+        () => {
+          addingNewLink = false;
+        }
+      "
+    />
   </section>
 </template>

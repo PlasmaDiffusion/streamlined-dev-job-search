@@ -8,10 +8,11 @@ export interface Application {
   id: number;
 
   linkOfPosting: string;
-  sitePostingCameFrom: string;
+  sitePostingCameFrom?: string;
   posting: string;
+  tags?: string[];
 
-  applied?: boolean;
+  applied: boolean;
   coverLetter?: string;
 }
 
@@ -38,10 +39,20 @@ export function loadLinks() {
   return linkArray;
 }
 
+export function loadApplications() {
+  const previousApplications = getCookie("Applications");
+
+  if (!previousApplications) {
+    return [];
+  }
+
+  const linkArray: Application[] = JSON.parse(previousApplications);
+  return linkArray;
+}
+
 export function removeLinkAtIndex(indexToDelete: number) {
   const links = loadLinks();
   links.splice(indexToDelete, 1);
-
 
   for (let i = 0; i < links.length; i++) {
     links[i].id = i;
@@ -50,30 +61,17 @@ export function removeLinkAtIndex(indexToDelete: number) {
   console.log("Deleted a link. Remaining links:", links);
   setCookie("Links", JSON.stringify(links));
   return links;
+}
 
-  // const newArray: JobBoardLink[] = [];
+export function removeApplicationsAtIndex(indexToDelete: number) {
+  const applications = loadApplications();
+  applications.splice(indexToDelete, 1);
 
-  // for (let i = 0; i < links.length; i++) {
-  //   if (i !== indexNeeded) {
-  //     newArray.push(links[i]);
-  //   }
-  // }
+  for (let i = 0; i < applications.length; i++) {
+    applications[i].id = i;
+  }
 
-  // console.log("Deleted a link. Remaining links:", newArray);
-  // console
-  // setCookie("Links", JSON.stringify(newArray));
-  // return newArray;
-
-  // const newArray: JobBoardLink[] = [];
-
-  // for (let i = 0; i < links.length; i++) {
-  //   if (i !== indexNeeded) {
-  //     newArray.push(links[i]);
-  //   }
-  // }
-
-  // console.log("Deleted a link. Remaining links:", newArray);
-  // console
-  // setCookie("Links", JSON.stringify(newArray));
-  // return newArray;
+  console.log("Deleted an application. Remaining applications:", applications);
+  setCookie("Applications", JSON.stringify(applications));
+  return applications;
 }

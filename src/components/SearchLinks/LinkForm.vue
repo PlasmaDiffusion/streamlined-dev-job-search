@@ -50,7 +50,6 @@ function submit(this: any, event: any) {
 <template>
   <section>
     <h2 v-if="linkToEdit" :style="{ backgroundColor: colour }">
-      Edit {{ linkToEdit.displayName }} Link
       <button
         class="cancel"
         :onclick="
@@ -61,8 +60,21 @@ function submit(this: any, event: any) {
       >
         X
       </button>
+      Edit {{ linkToEdit.displayName }} Link
     </h2>
-    <h2 v-else>Enter A Common Search Link</h2>
+    <h2 v-else>
+      <button
+        class="cancel"
+        :onclick="
+          () => {
+            emit('closed');
+          }
+        "
+      >
+        X
+      </button>
+      Enter A Common Search Link
+    </h2>
 
     <form @submit="submit">
       <label><b>Link</b></label>
