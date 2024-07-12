@@ -7,6 +7,7 @@ const props = defineProps({
 import "./ListOfLinks.scss";
 import { ref } from "vue";
 import { JobBoardLink, loadLinks } from "../../services/DataToSave";
+import InputField from "../CommonComponents/InputField.vue";
 import { setCookie } from "../../services/CookieManager";
 
 const emit = defineEmits(["closed"]);
@@ -29,6 +30,11 @@ function submit(this: any, event: any) {
     isCompanySite: isCompanySite.value,
     timesClicked: 0,
     id: props.linkToEdit?.id || -1,
+    lastClicked: {
+      day: 0,
+      month: 0,
+      year: 0,
+    },
   };
 
   //Add a new link, or edit an old one. -1 will be the default id that then gets updated.
@@ -77,34 +83,38 @@ function submit(this: any, event: any) {
     </h2>
 
     <form @submit="submit">
-      <label><b>Link</b></label>
-      <input v-model="link" placeholder="Link" />
-      <label class="help" v-if="showHelp"
-        >^ Add a common link you'll use that will help you with your
-        search.</label
-      >
-      <br />
 
-      <label><b>Name Of Site</b></label>
-      <input v-model="displayName" placeholder="Name Of Site" />
-      <label class="help" v-if="showHelp"
-        >^ Add a name to identity the link.</label
-      >
-      <br />
+      <InputField
+        label="Link"
+        :showHelp="showHelp"
+        helpText="^ Add a common link you'll use that will help you with your search."
+        :value="link"
+        @onUpdated="(e : any) => { link = e.target.value; }"
+      />
 
-      <label><b>Category</b></label>
-      <input v-model="category" placeholder="Category" />
-      <label class="help" v-if="showHelp"
-        >^ Links that are clicked more often will show up first in their
-        specific category.</label
-      >
 
-      <br />
+      <InputField
+        label="Name Of Site"
+        :showHelp="showHelp"
+        helpText="^ Add a name to identify the link."
+        :value="displayName"
+        @onUpdated="(e : any) => { displayName = e.target.value; }"
+      />
 
-      <label><b>Colour</b></label>
-      <input v-model="colour" placeholder="Colour" />
+      <InputField
+        label="Category"
+        :showHelp="showHelp"
+        helpText="^ Links that are clicked more often will show up first in their
+        specific category."
+        :value="category"
+        @onUpdated="(e : any) => { category = e.target.value; }"
+      />
 
-      <br />
+      <InputField
+        label="Colour"
+        :value="colour"
+        @onUpdated="(e : any) => { colour = e.target.value; }"
+      />
 
       <label><b>Is Company Site</b></label>
       <input type="checkbox" v-model="isCompanySite" />
@@ -122,7 +132,7 @@ function submit(this: any, event: any) {
       <p class>Preview</p>
       <div class="category" :style="{ color: colour }">{{ category }}:</div>
       <div class="linkSection" :style="{ color: colour }">
-        <span class="linkIcon">➤ </span><a :href=link>{{ displayName }}</a>
+        <span class="linkIcon">➤ </span><a :href="link">{{ displayName }}</a>
         <span class="timesClicked"> (0 clicks)</span>
       </div>
     </div>
