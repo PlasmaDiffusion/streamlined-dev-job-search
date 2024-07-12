@@ -4,6 +4,7 @@ import { JobBoardLink, loadLinks } from "../../services/DataToSave";
 import { sortLinksByCategory } from "../../services/Sorting";
 import LinkForm from "./LinkForm.vue";
 import { removeLinkAtIndex } from "../../services/DataToSave";
+import { setCookie } from "../../services/CookieManager";
 defineProps({
   showHelp: { type: Boolean, required: true },
   forCompanySiteLinks: { type: Boolean },
@@ -14,12 +15,31 @@ const editing = ref(-1);
 const addingNewLink = ref(false);
 let currentCategory = "";
 
+const currentDate = new Date();
+const currentDay = currentDate.getDay();
+const currentMonth = currentDate.getMonth();
+
 function checkIfNewCategory(category: string) {
   if (currentCategory !== category) {
     currentCategory = category;
     return true;
   }
   return false;
+}
+
+function linkClicked(indexOfLinkClicked: number) {
+  const linksToUpdate: JobBoardLink[] = links.value;
+
+  linksToUpdate[indexOfLinkClicked].timesClicked++;
+  const date = new Date();
+  linksToUpdate[indexOfLinkClicked].lastClicked = {
+    day: date.getDay(),
+    month: date.getMonth(),
+    year: date.getFullYear(),
+  };
+
+  links.value = [...linksToUpdate];
+  setCookie("Links", JSON.stringify(linksToUpdate));
 }
 </script>
 
@@ -43,8 +63,29 @@ function checkIfNewCategory(category: string) {
       >
         <div>
           <span class="linkIcon">➤ </span>
-          <a class="link" :href="link.link">{{ link.displayName }}</a>
-          <span class="timesClicked"> (0 clicks) </span>
+          <a
+            class="link"
+            target="_blank"
+            noopener
+            noreferrer
+            :onclick="
+              () => {
+                linkClicked(index);
+              }
+            "
+            :href="link.link"
+            >{{ link.displayName }}</a
+          >
+          <span
+            v-if="
+              link.lastClicked &&
+              link.lastClicked.day === currentDay &&
+              link.lastClicked.month === currentMonth
+            "
+          >
+            ✔</span
+          >
+          <span class="timesClicked"> ({{ link.timesClicked }} clicks) </span>
           <span
             class="edit"
             :onclick="

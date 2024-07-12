@@ -1,12 +1,18 @@
-export function setCookie(cName: string, cValue: any, exdays: number = 400) {
+/**
+ * @param cName Case sensitive name of the cookie!
+ * @param cValue Value you are going to overwrite/save a cookie with.
+ * @param exDays How many does until this expires. Beware browser limits.
+ */
+export function setCookie(cName: string, cValue: any, exDays: number = 400) {
   const d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+  d.setTime(d.getTime() + exDays * 24 * 60 * 60 * 1000);
   let expires = "expires=" + d.toUTCString();
   document.cookie = cName + "=" + cValue + ";" + expires + ";path=/";
 }
 
-export function getCookie(cname: string) {
-  let name = cname + "=";
+export function getCookie(cName: string) {
+  cName[0].toUpperCase();
+  let name = cName + "=";
   let ca = document.cookie.split(";");
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
@@ -20,14 +26,11 @@ export function getCookie(cname: string) {
   return "";
 }
 
-export function checkCookie(cName : string) {
-  let user = getCookie(cName);
-  if (user != "") {
-    alert("Welcome again " + user);
+export function checkIfCookieExists(cName : string) {
+  let cookie = getCookie(cName);
+  if (cookie != "") {
+    return true;
   } else {
-    const user = prompt("Please enter your name:", "");
-    if (user != "" && user != null) {
-      setCookie(cName, user, 365);
-    }
+    return false;
   }
 }

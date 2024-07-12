@@ -21,6 +21,7 @@ export interface JobBoardLink {
   link: string;
   displayName: string;
   timesClicked: number;
+  lastClicked: { day: number; month: number; year: number };
   id: number;
 
   category: string;
