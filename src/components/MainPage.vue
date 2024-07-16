@@ -50,5 +50,7 @@ const helpChecked = ref(false);
       />
     </div>
     <TestGraph />
+    <a href="https://www.hnhiringtrends.com/">Hacker News Hiring Trends</a>
+    <a href="https://layoffs.fyi/">Layoff Graph</a>
   </div>
 </template>
