@@ -22,7 +22,7 @@ const helpChecked = ref(false);
   <div>
     <div class="mainContainer">
       <div class="linksSection">
-        <ListOfLinks :showHelp="helpChecked" forCompanySiteLinks />
+        <ListOfLinks :showHelp="helpChecked" listIsForCompanySiteLinks />
       </div>
 
       <div id="jobApplicationSection">

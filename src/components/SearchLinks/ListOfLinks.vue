@@ -7,7 +7,7 @@ import { removeLinkAtIndex } from "../../services/DataToSave";
 import { setCookie } from "../../services/CookieManager";
 defineProps({
   showHelp: { type: Boolean, required: true },
-  forCompanySiteLinks: { type: Boolean },
+  listIsForCompanySiteLinks: { type: Boolean },
 });
 
 const links = ref<JobBoardLink[]>(sortLinksByCategory(loadLinks()));
@@ -46,76 +46,82 @@ function linkClicked(indexOfLinkClicked: number) {
 <template>
   <section>
     <h2 v-if="editing === -1 && !addingNewLink">
-      {{ `Quick ${forCompanySiteLinks ? "Company Site" : "Job Board"} Links` }}
+      {{
+        `Quick ${
+          listIsForCompanySiteLinks ? "Company Site" : "Job Board"
+        } Links`
+      }}
     </h2>
     <div v-for="(link, index) in links" :key="link.id">
-      <div
-        v-if="editing === -1 && checkIfNewCategory(link.category)"
-        class="category"
-        :style="{ color: link.colour }"
-      >
-        {{ link.category }}:
-      </div>
-      <div
-        v-if="editing === -1 && !addingNewLink"
-        class="linkSection"
-        :style="{ color: link.colour }"
-      >
-        <div>
-          <span class="linkIcon">➤ </span>
-          <a
-            class="link"
-            target="_blank"
-            noopener
-            noreferrer
-            :onclick="
-              () => {
-                linkClicked(index);
-              }
-            "
-            :href="link.link"
-            >{{ link.displayName }}</a
-          >
-          <span
-            v-if="
-              link.lastClicked &&
-              link.lastClicked.day === currentDay &&
-              link.lastClicked.month === currentMonth
-            "
-          >
-            ✔</span
-          >
-          <span class="timesClicked"> ({{ link.timesClicked }} clicks) </span>
-          <span
-            class="edit"
-            :onclick="
-              () => {
-                editing = link.id;
-              }
-            "
-            >✎</span
-          >
-          <span
-            class="delete"
-            :onclick="
-              () => {
-                links = removeLinkAtIndex(index);
-              }
-            "
-            >🗑</span
-          >
+      <div v-if="link.isCompanySite === listIsForCompanySiteLinks">
+        <div
+          v-if="editing === -1 && checkIfNewCategory(link.category)"
+          class="category"
+          :style="{ color: link.colour }"
+        >
+          {{ link.category }}:
         </div>
+        <div
+          v-if="editing === -1 && !addingNewLink"
+          class="linkSection"
+          :style="{ color: link.colour }"
+        >
+          <div>
+            <span class="linkIcon" :title="`Id: ${link.id}`">➤ </span>
+            <a
+              class="link"
+              target="_blank"
+              noopener
+              noreferrer
+              :onclick="
+                () => {
+                  linkClicked(index);
+                }
+              "
+              :href="link.link"
+              >{{ link.displayName }}</a
+            >
+            <span
+              v-if="
+                link.lastClicked &&
+                link.lastClicked.day === currentDay &&
+                link.lastClicked.month === currentMonth
+              "
+            >
+              ✔</span
+            >
+            <span class="timesClicked"> ({{ link.timesClicked }} clicks) </span>
+            <span
+              class="edit"
+              :onclick="
+                () => {
+                  editing = link.id;
+                }
+              "
+              >✎</span
+            >
+            <span
+              class="delete"
+              :onclick="
+                () => {
+                  links = removeLinkAtIndex(index);
+                }
+              "
+              >🗑</span
+            >
+          </div>
+        </div>
+        <LinkForm
+          v-if="editing === link.id"
+          :showHelp="showHelp"
+          :linkToEdit="link"
+          @closed="
+            () => {
+              editing = -1;
+            }
+          "
+        />
       </div>
-      <LinkForm
-        v-if="editing === link.id"
-        :showHelp="showHelp"
-        :linkToEdit="link"
-        @closed="
-          () => {
-            editing = -1;
-          }
-        "
-      />
     </div>
 
     <button

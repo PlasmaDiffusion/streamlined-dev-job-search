@@ -11,7 +11,6 @@ export function setCookie(cName: string, cValue: any, exDays: number = 400) {
 }
 
 export function getCookie(cName: string) {
-  cName[0].toUpperCase();
   let name = cName + "=";
   let ca = document.cookie.split(";");
   for (let i = 0; i < ca.length; i++) {
