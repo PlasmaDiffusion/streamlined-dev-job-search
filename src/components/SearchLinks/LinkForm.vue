@@ -2,6 +2,7 @@
 const props = defineProps({
   showHelp: { type: Boolean, required: true },
   linkToEdit: { type: Object as () => JobBoardLink, required: false },
+  isForCompanySite: { type: Boolean, required: false },
 });
 
 import "./ListOfLinks.scss";
@@ -83,7 +84,6 @@ function submit(this: any, event: any) {
     </h2>
 
     <form @submit="submit">
-
       <InputField
         label="Link"
         :showHelp="showHelp"
@@ -91,7 +91,6 @@ function submit(this: any, event: any) {
         :value="link"
         @onUpdated="(e : any) => { link = e.target.value; }"
       />
-
 
       <InputField
         label="Name Of Site"
@@ -116,8 +115,8 @@ function submit(this: any, event: any) {
         @onUpdated="(e : any) => { colour = e.target.value; }"
       />
 
-      <label><b>Is Company Site</b></label>
-      <input type="checkbox" v-model="isCompanySite" />
+      <label><b>Is Company Site {{ isForCompanySite }}</b></label>
+      <input type="checkbox" v-model="isCompanySite" :checked="isForCompanySite"/>
       <label class="help" v-if="showHelp"
         >^ Job search sites will be shown on the right of this page. Company
         sites will be on the left.</label

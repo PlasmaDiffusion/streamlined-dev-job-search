@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { JobBoardLink, loadLinks } from "../../services/DataToSave";
 import { sortLinksByCategory } from "../../services/Sorting";
 import LinkForm from "./LinkForm.vue";
+import CustomLink from "./CustomLink.vue";
 import { removeLinkAtIndex } from "../../services/DataToSave";
 import { setCookie } from "../../services/CookieManager";
 defineProps({
@@ -11,13 +12,9 @@ defineProps({
 });
 
 const links = ref<JobBoardLink[]>(sortLinksByCategory(loadLinks()));
-const editing = ref(-1);
+const editing = ref<JobBoardLink>();
 const addingNewLink = ref(false);
 let currentCategory = "";
-
-const currentDate = new Date();
-const currentDay = currentDate.getDay();
-const currentMonth = currentDate.getMonth();
 
 function checkIfNewCategory(category: string) {
   if (currentCategory !== category) {
@@ -45,7 +42,7 @@ function linkClicked(indexOfLinkClicked: number) {
 
 <template>
   <section>
-    <h2 v-if="editing === -1 && !addingNewLink">
+    <h2 v-if="!editing && !addingNewLink">
       {{
         `Quick ${
           listIsForCompanySiteLinks ? "Company Site" : "Job Board"
@@ -55,69 +52,28 @@ function linkClicked(indexOfLinkClicked: number) {
     <div v-for="(link, index) in links" :key="link.id">
       <div v-if="link.isCompanySite === listIsForCompanySiteLinks">
         <div
-          v-if="editing === -1 && checkIfNewCategory(link.category)"
+          v-if="!editing && checkIfNewCategory(link.category)"
           class="category"
           :style="{ color: link.colour }"
         >
           {{ link.category }}:
         </div>
-        <div
-          v-if="editing === -1 && !addingNewLink"
-          class="linkSection"
-          :style="{ color: link.colour }"
-        >
-          <div>
-            <span class="linkIcon" :title="`Id: ${link.id}`">➤ </span>
-            <a
-              class="link"
-              target="_blank"
-              noopener
-              noreferrer
-              :onclick="
-                () => {
-                  linkClicked(index);
-                }
-              "
-              :href="link.link"
-              >{{ link.displayName }}</a
-            >
-            <span
-              v-if="
-                link.lastClicked &&
-                link.lastClicked.day === currentDay &&
-                link.lastClicked.month === currentMonth
-              "
-            >
-              ✔</span
-            >
-            <span class="timesClicked"> ({{ link.timesClicked }} clicks) </span>
-            <span
-              class="edit"
-              :onclick="
-                () => {
-                  editing = link.id;
-                }
-              "
-              >✎</span
-            >
-            <span
-              class="delete"
-              :onclick="
-                () => {
-                  links = removeLinkAtIndex(index);
-                }
-              "
-              >🗑</span
-            >
-          </div>
-        </div>
-        <LinkForm
-          v-if="editing === link.id"
-          :showHelp="showHelp"
-          :linkToEdit="link"
-          @closed="
+        <CustomLink
+          v-if="!editing && !addingNewLink"
+          :link="link"
+          @onEditClicked="
             () => {
-              editing = -1;
+              editing = link;
+            }
+          "
+          @onDeleteClicked="
+            () => {
+              links = removeLinkAtIndex(index);
+            }
+          "
+          @onLinkClicked="
+            () => {
+              linkClicked(index);
             }
           "
         />
@@ -134,11 +90,14 @@ function linkClicked(indexOfLinkClicked: number) {
       + New Link
     </button>
     <LinkForm
-      v-if="editing === -1 && addingNewLink"
+      v-if="editing || addingNewLink"
       :showHelp="showHelp"
+      :linkToEdit="editing"
+      :isForCompanySite="listIsForCompanySiteLinks"
       @closed="
         () => {
           addingNewLink = false;
+          editing = undefined;
         }
       "
     />
