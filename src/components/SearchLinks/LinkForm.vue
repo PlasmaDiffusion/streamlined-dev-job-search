@@ -40,10 +40,13 @@ function submit(this: any, event: any) {
 
   //Add a new link, or edit an old one. -1 will be the default id that then gets updated.
   if (newLink?.id === -1) {
-    newLink.id = links.length;
+    newLink.id = Date.now();
     links.push(newLink);
   } else if (props.linkToEdit?.id && props.linkToEdit?.id >= 0) {
-    links[props.linkToEdit.id] = newLink;
+    const indexToEdit = links.findIndex((link) => {
+      link.id === props.linkToEdit?.id;
+    });
+    links[indexToEdit] = newLink;
   } else {
     alert("Negative link id. Cannot edit.");
     return;
@@ -115,8 +118,14 @@ function submit(this: any, event: any) {
         @onUpdated="(e : any) => { colour = e.target.value; }"
       />
 
-      <label><b>Is Company Site {{ isForCompanySite }}</b></label>
-      <input type="checkbox" v-model="isCompanySite" :checked="isForCompanySite"/>
+      <label
+        ><b>Is Company Site {{ isForCompanySite }}</b></label
+      >
+      <input
+        type="checkbox"
+        v-model="isCompanySite"
+        :checked="isForCompanySite"
+      />
       <label class="help" v-if="showHelp"
         >^ Job search sites will be shown on the right of this page. Company
         sites will be on the left.</label

@@ -68,7 +68,7 @@ function linkClicked(indexOfLinkClicked: number) {
           "
           @onDeleteClicked="
             () => {
-              links = removeLinkAtIndex(index);
+              links = removeLinkAtIndex(link.id);
             }
           "
           @onLinkClicked="
@@ -84,6 +84,7 @@ function linkClicked(indexOfLinkClicked: number) {
       :onClick="
         () => {
           addingNewLink = true;
+          editing = undefined;
         }
       "
     >

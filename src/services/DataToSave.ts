@@ -51,8 +51,11 @@ export function loadApplications() {
   return linkArray;
 }
 
-export function removeLinkAtIndex(indexToDelete: number) {
+export function removeLinkAtIndex(idToDelete: number) {
   const links = loadLinks();
+
+  const indexToDelete = links.findIndex((link)=>{link.id === idToDelete});
+
   links.splice(indexToDelete, 1);
 
   for (let i = 0; i < links.length; i++) {
