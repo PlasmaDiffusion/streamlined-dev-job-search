@@ -12,8 +12,6 @@ defineProps({
 });
 
 const links = ref<JobBoardLink[]>(sortLinksByCategory(loadLinks()));
-  console.log(links.value);
-
 const editing = ref<JobBoardLink>();
 const addingNewLink = ref(false);
 let currentCategory = "";
