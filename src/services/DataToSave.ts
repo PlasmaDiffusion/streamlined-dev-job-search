@@ -54,7 +54,9 @@ export function loadApplications() {
 export function removeLinkAtIndex(idToDelete: number) {
   const links = loadLinks();
 
-  const indexToDelete = links.findIndex((link)=>{link.id === idToDelete});
+  const indexToDelete = links.findIndex((obj) => {
+    obj.id === idToDelete;
+  });
 
   links.splice(indexToDelete, 1);
 

@@ -43,9 +43,10 @@ function submit(this: any, event: any) {
     newLink.id = Date.now();
     links.push(newLink);
   } else if (props.linkToEdit?.id && props.linkToEdit?.id >= 0) {
-    const indexToEdit = links.findIndex((link) => {
-      link.id === props.linkToEdit?.id;
-    });
+    const indexToEdit = links.findIndex(
+      (obj) => obj.id === props.linkToEdit?.id
+    );
+    console.log("updating link with this id:", indexToEdit);
     links[indexToEdit] = newLink;
   } else {
     alert("Negative link id. Cannot edit.");
