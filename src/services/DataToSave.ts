@@ -51,20 +51,15 @@ export function loadApplications() {
   return linkArray;
 }
 
-export function removeLinkAtIndex(idToDelete: number) {
+export function removeLinkById(idToDelete: number) {
   const links = loadLinks();
 
-  const indexToDelete = links.findIndex((obj) => {
-    obj.id === idToDelete;
+  const indexToDelete = links.findIndex((linkObj) => {
+    linkObj.id === idToDelete;
   });
 
   links.splice(indexToDelete, 1);
 
-  for (let i = 0; i < links.length; i++) {
-    links[i].id = i;
-  }
-
-  console.log("Deleted a link. Remaining links:", links);
   setCookie("Links", JSON.stringify(links));
   return links;
 }
@@ -73,11 +68,6 @@ export function removeApplicationsAtIndex(indexToDelete: number) {
   const applications = loadApplications();
   applications.splice(indexToDelete, 1);
 
-  for (let i = 0; i < applications.length; i++) {
-    applications[i].id = i;
-  }
-
-  console.log("Deleted an application. Remaining applications:", applications);
   setCookie("Applications", JSON.stringify(applications));
   return applications;
 }

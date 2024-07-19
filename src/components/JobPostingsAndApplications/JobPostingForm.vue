@@ -41,7 +41,7 @@ function submit(event: Event) {
 
   //Add a new job posting, or edit an old one. -1 will be the default id that then gets updated.
   if (newApplication?.id === -1) {
-    newApplication.id = applications.length;
+    newApplication.id = Date.now();
     applications.push(newApplication);
   } else if (props.postingToEdit?.id && props.postingToEdit?.id >= 0) {
     applications[props.postingToEdit.id] = newApplication;

@@ -39,12 +39,12 @@ function submit(this: any, event: any) {
   };
 
   //Add a new link, or edit an old one. -1 will be the default id that then gets updated.
-  if (newLink?.id === -1) {
+  if (newLink.id === -1 || newLink.id === undefined) {
     newLink.id = Date.now();
     links.push(newLink);
-  } else if (props.linkToEdit?.id && props.linkToEdit?.id >= 0) {
+  } else if (props.linkToEdit && props.linkToEdit.id >= 0) {
     const indexToEdit = links.findIndex(
-      (obj) => obj.id === props.linkToEdit?.id
+      (linkObj) => linkObj.id === props.linkToEdit?.id
     );
     console.log("updating link with this id:", indexToEdit);
     links[indexToEdit] = newLink;

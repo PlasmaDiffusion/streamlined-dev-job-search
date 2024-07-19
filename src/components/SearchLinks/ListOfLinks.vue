@@ -4,7 +4,7 @@ import { JobBoardLink, loadLinks } from "../../services/DataToSave";
 import { sortLinksByCategory } from "../../services/Sorting";
 import LinkForm from "./LinkForm.vue";
 import CustomLink from "./CustomLink.vue";
-import { removeLinkAtIndex } from "../../services/DataToSave";
+import { removeLinkById } from "../../services/DataToSave";
 import { setCookie } from "../../services/CookieManager";
 defineProps({
   showHelp: { type: Boolean, required: true },
@@ -12,6 +12,8 @@ defineProps({
 });
 
 const links = ref<JobBoardLink[]>(sortLinksByCategory(loadLinks()));
+  console.log(links.value);
+
 const editing = ref<JobBoardLink>();
 const addingNewLink = ref(false);
 let currentCategory = "";
@@ -68,7 +70,7 @@ function linkClicked(indexOfLinkClicked: number) {
           "
           @onDeleteClicked="
             () => {
-              links = removeLinkAtIndex(link.id);
+              links = removeLinkById(link.id);
             }
           "
           @onLinkClicked="

@@ -21,7 +21,7 @@ function sortLinksByTotalClicksInCategory(links: JobBoardLink[]) {
 
   links.forEach((link) => {
     const indexOfExistingCategory = clicksInCategories.findIndex(
-      (obj) => obj.category === link.category
+      (linkObj) => linkObj.category === link.category
     );
     if (indexOfExistingCategory !== -1) {
       clicksInCategories[indexOfExistingCategory].clicks += link.timesClicked;
