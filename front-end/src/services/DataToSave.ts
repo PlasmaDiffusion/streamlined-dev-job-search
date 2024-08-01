@@ -36,7 +36,11 @@ export function loadLinks() {
     return [];
   }
 
+
   const linkArray: JobBoardLink[] = JSON.parse(previousLinks);
+  linkArray.forEach((link)=>{
+    console.log(link.displayName);
+  })
   return linkArray;
 }
 

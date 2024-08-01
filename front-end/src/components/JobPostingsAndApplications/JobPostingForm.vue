@@ -37,7 +37,6 @@ function submit(event: Event) {
   };
 
   newApplication.tags = tags.value.split(", ");
-  console.log("tags:", newApplication.tags);
 
   //Add a new job posting, or edit an old one. -1 will be the default id that then gets updated.
   if (newApplication?.id === -1) {

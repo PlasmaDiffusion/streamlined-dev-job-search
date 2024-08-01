@@ -42,7 +42,6 @@ const helpChecked = ref(false);
         type="checkbox"
         @change="
           (event) => {
-            console.log(helpChecked);
             helpChecked = !helpChecked;
           }
         "

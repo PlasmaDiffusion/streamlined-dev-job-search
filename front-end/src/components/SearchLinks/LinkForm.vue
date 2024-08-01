@@ -41,20 +41,23 @@ function submit(this: any, event: any) {
   //Add a new link, or edit an old one. -1 will be the default id that then gets updated.
   if (newLink.id === -1 || newLink.id === undefined) {
     newLink.id = Date.now();
+    console.log("new Link:", newLink);
     links.push(newLink);
   } else if (props.linkToEdit && props.linkToEdit.id >= 0) {
     const indexToEdit = links.findIndex(
       (linkObj) => linkObj.id === props.linkToEdit?.id
     );
-    console.log("updating link with this id:", indexToEdit);
     links[indexToEdit] = newLink;
   } else {
     alert("Negative link id. Cannot edit.");
     return;
   }
 
+  console.log(links[links.length - 1]);
+  alert(newLink.displayName + " will be added. id: " + newLink.id);
+
   setCookie("Links", JSON.stringify(links));
-  location.reload();
+  //location.reload();
 }
 </script>
 
