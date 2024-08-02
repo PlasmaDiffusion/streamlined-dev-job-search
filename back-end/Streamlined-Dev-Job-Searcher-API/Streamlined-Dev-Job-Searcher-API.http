@@ -1,0 +1,6 @@
+@Streamlined_Dev_Job_Searcher_API_HostAddress = http://localhost:5094
+
+GET {{Streamlined_Dev_Job_Searcher_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
