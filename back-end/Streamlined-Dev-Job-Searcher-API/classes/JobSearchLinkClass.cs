@@ -4,7 +4,7 @@ using Amazon.DynamoDBv2.DataModel;
 namespace StreamlinedJobSearcher.Classes;
 
 [DynamoDBTable("JobSearchLinks")]
-class JobSearchLink
+public class JobSearchLink
 {
 
     public JobSearchLink(int id, string link, string displayName, int timesClicked,
@@ -17,26 +17,20 @@ class JobSearchLink
     }
 
     [DynamoDBHashKey("Id")]
-    int Id { get; } = 0;
+    public int Id { get; set; } = 0;
 
-    [DynamoDBProperty("Link")]
     string Link { get; set; } = "";
 
-    [DynamoDBProperty("DisplayName")]
     string DisplayName { get; set; } = "";
 
-    [DynamoDBProperty("TimesClicked")]
     int TimesClicked { get; set; } = 0;
 
-    [DynamoDBProperty("LastClicked")]
     DateTime LastClicked { get; set; } = DateTime.Now;
 
-    [DynamoDBProperty("Category")]
     string Category { get; set; } = "";
-    [DynamoDBProperty("Colour")]
+
     string Colour { get; set; } = "";
     
-    [DynamoDBProperty("IsCompanySite")]
     public bool IsCompanySite { get; set; } = false;
 
 

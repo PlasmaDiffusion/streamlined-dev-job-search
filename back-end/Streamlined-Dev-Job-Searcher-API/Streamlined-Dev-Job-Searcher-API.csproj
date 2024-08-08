@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Streamlined_Dev_Job_Searcher_API</RootNamespace>
+    <UserSecretsId>0b716752-d5e8-48bb-a1c2-4583d61bbf77</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

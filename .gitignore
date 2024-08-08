@@ -57,3 +57,4 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+back-end/Streamlined-Dev-Job-Searcher-API/secrets.json
