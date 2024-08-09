@@ -1,8 +1,8 @@
-public class Logger
+public static class Logger
 {
     static ILogger<Program>? logger;
 
-    Logger()
+    static Logger()
     {
         // create a logger factory
         var loggerFactory = LoggerFactory.Create(

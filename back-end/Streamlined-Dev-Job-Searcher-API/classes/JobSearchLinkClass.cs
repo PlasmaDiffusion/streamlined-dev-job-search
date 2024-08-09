@@ -19,17 +19,17 @@ public class JobSearchLink
     [DynamoDBHashKey("Id")]
     public int Id { get; set; } = 0;
 
-    string Link { get; set; } = "";
+    public string Link { get; set; } = "";
 
-    string DisplayName { get; set; } = "";
+    public string DisplayName { get; set; } = "";
 
-    int TimesClicked { get; set; } = 0;
+    public int TimesClicked { get; set; } = 0;
 
-    DateTime LastClicked { get; set; } = DateTime.Now;
+    public DateTime LastClicked { get; set; } = DateTime.Now;
 
-    string Category { get; set; } = "";
+    public string Category { get; set; } = "";
 
-    string Colour { get; set; } = "";
+    public string Colour { get; set; } = "";
     
     public bool IsCompanySite { get; set; } = false;
 
