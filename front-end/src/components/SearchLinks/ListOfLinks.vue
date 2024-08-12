@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { JobBoardLink, loadLinks } from "../../services/DataToSave";
-import { sortLinksByCategory } from "../../services/Sorting";
+import { JobBoardLink } from "../../services/DataToSave";
 import LinkForm from "./LinkForm.vue";
 import CustomLink from "./CustomLink.vue";
 import { removeLinkById } from "../../services/DataToSave";
 import { setCookie } from "../../services/CookieManager";
-defineProps({
+const props = defineProps({
+  fetchedLinks: {type: Object as () => JobBoardLink[] },
   showHelp: { type: Boolean, required: true },
   listIsForCompanySiteLinks: { type: Boolean },
 });
 
-const links = ref<JobBoardLink[]>(sortLinksByCategory(loadLinks()));
+const links = ref<JobBoardLink[]>(props.fetchedLinks || []);
 const editing = ref<JobBoardLink>();
 const addingNewLink = ref(false);
 let currentCategory = "";

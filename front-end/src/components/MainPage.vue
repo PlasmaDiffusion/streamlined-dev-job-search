@@ -1,4 +1,6 @@
 <script>
+import axios from "axios";
+
 export default {
   name: "MainPage",
   components: { JobPostingForm, LinkForm, ListOfLinks, TestGraph },
@@ -6,23 +8,42 @@ export default {
     msg: String,
   },
 };
-</script>
 
-<script setup>
 import JobPostingForm from "./JobPostingsAndApplications/JobPostingForm.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import LinkForm from "./SearchLinks/LinkForm.vue";
 import ListOfLinks from "./SearchLinks/ListOfLinks.vue";
 import TestGraph from "./Analytics/TestGraph.vue";
 import "./MainPage.scss";
 const helpChecked = ref(false);
+
+const route = useRoute();
+
+const loading = ref(false);
+const post = ref(null);
+const error = ref(null);
+const fetchedLinks = ref(null);
+
+// watch the params of the route to fetch the data again
+watch(() => route, fetchData, { immediate: true });
+
+async function fetchData() {
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}`);
+  fetchedLinks.value = response.data;
+  console.log("*", response);
+}
 </script>
 
 <template>
   <div>
     <div class="mainContainer">
       <div class="linksSection">
-        <ListOfLinks :showHelp="helpChecked" listIsForCompanySiteLinks />
+        <ListOfLinks
+          :showHelp="helpChecked"
+          :fetched-links="fetchedLinks.companySiteLinks || []"
+          listIsForCompanySiteLinks
+        />
       </div>
 
       <div id="jobApplicationSection">
@@ -32,7 +53,10 @@ const helpChecked = ref(false);
       </div>
 
       <div class="linksSection">
-        <ListOfLinks :showHelp="helpChecked" />
+        <ListOfLinks
+          :showHelp="helpChecked"
+          :fetched-links="fetchedLinks.jobBoardLinks || []"
+        />
       </div>
     </div>
 
