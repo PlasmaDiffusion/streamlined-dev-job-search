@@ -6,12 +6,12 @@ import CustomLink from "./CustomLink.vue";
 import { removeLinkById } from "../../services/DataToSave";
 import { setCookie } from "../../services/CookieManager";
 const props = defineProps({
-  fetchedLinks: {type: Object as () => JobBoardLink[] },
+  fetchedLinks: {type: Object as () => JobBoardLink[], required: true },
   showHelp: { type: Boolean, required: true },
   listIsForCompanySiteLinks: { type: Boolean },
 });
 
-const links = ref<JobBoardLink[]>(props.fetchedLinks || []);
+const links = ref<JobBoardLink[]>(props.fetchedLinks);
 const editing = ref<JobBoardLink>();
 const addingNewLink = ref(false);
 let currentCategory = "";
