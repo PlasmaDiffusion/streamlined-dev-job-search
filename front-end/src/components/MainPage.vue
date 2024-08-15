@@ -7,20 +7,16 @@ defineProps({
 
 import JobPostingForm from "./JobPostingsAndApplications/JobPostingForm.vue";
 import { ref, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import LinkForm from "./SearchLinks/LinkForm.vue";
+import { useRoute } from "vue-router";
 import ListOfLinks from "./SearchLinks/ListOfLinks.vue";
 import TestGraph from "./Analytics/TestGraph.vue";
-import { FetchedLinksObject } from "../services/API_Calls.ts";
+import { FetchedLinksResponse } from "../services/API_Calls.ts";
 import "./MainPage.scss";
-const helpChecked = ref(false);
 
 const route = useRoute();
-
-const loading = ref(false);
-const post = ref(null);
-const error = ref(null);
-const fetchedLinks = ref<FetchedLinksObject>({
+const helpChecked = ref(false);
+const loading = ref(true);
+const fetchedLinks = ref<FetchedLinksResponse>({
   companySiteLinks: [],
   jobBoardLinks: [],
 });
@@ -28,11 +24,11 @@ const fetchedLinks = ref<FetchedLinksObject>({
 // watch the params of the route to fetch the data again
 watch(() => route, fetchData, { immediate: true });
 
-async function fetchData() {
-  const response = await axios.get(`${import.meta.env.VITE_API_URL}`);
-  fetchedLinks.value = response.data;
-  console.log("*", response);
-  console.log("*", fetchedLinks.value);
+function fetchData() {
+  axios.get(`${import.meta.env.VITE_API_URL}`).then((response) => {
+    fetchedLinks.value = response.data;
+    loading.value = false;
+  });
 }
 </script>
 
@@ -41,10 +37,12 @@ async function fetchData() {
     <div class="mainContainer">
       <div class="linksSection">
         <ListOfLinks
+          v-if="!loading"
           :showHelp="helpChecked"
           :fetched-links="fetchedLinks.companySiteLinks"
           listIsForCompanySiteLinks
         />
+        <p v-if="loading">Loading...</p>
       </div>
 
       <div id="jobApplicationSection">
@@ -55,9 +53,11 @@ async function fetchData() {
 
       <div class="linksSection">
         <ListOfLinks
+          v-if="!loading"
           :showHelp="helpChecked"
           :fetched-links="fetchedLinks.jobBoardLinks"
         />
+        <p v-if="loading">Loading...</p>
       </div>
     </div>
 

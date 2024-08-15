@@ -1,6 +1,6 @@
 import { JobBoardLink } from "./DataToSave";
 
-export interface FetchedLinksObject {
+export interface FetchedLinksResponse {
   companySiteLinks: JobBoardLink[],
   jobBoardLinks: JobBoardLink[],
 }
