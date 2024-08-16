@@ -9,7 +9,7 @@ import "./ListOfLinks.scss";
 import { ref } from "vue";
 import { JobBoardLink, loadLinks } from "../../services/DataToSave";
 import InputField from "../CommonComponents/InputField.vue";
-import { setCookie } from "../../services/CookieManager";
+import axios, { Axios, AxiosResponse } from "axios";
 
 const emit = defineEmits(["closed"]);
 
@@ -19,45 +19,48 @@ const displayName = ref(props.linkToEdit?.displayName || "");
 const category = ref(props.linkToEdit?.category || "");
 const isCompanySite = ref(props.linkToEdit?.isCompanySite || false);
 
-function submit(this: any, event: any) {
+async function submit(this: any, event: any) {
   event.preventDefault();
-  const links = loadLinks();
 
-  const newLink: JobBoardLink = {
+  const linkToAddOrEdit: JobBoardLink = {
     link: link.value,
+    user: 'guest',
     displayName: displayName.value,
     category: category.value,
     colour: colour.value || "blue",
     isCompanySite: isCompanySite.value,
     timesClicked: 0,
     id: props.linkToEdit?.id || -1,
-    lastClicked: {
-      day: 0,
-      month: 0,
-      year: 0,
-    },
+    lastClicked: undefined,
   };
 
-  //Add a new link, or edit an old one. -1 will be the default id that then gets updated.
-  if (newLink.id === -1 || newLink.id === undefined) {
-    newLink.id = Date.now();
-    console.log("new Link:", newLink);
-    links.push(newLink);
-  } else if (props.linkToEdit && props.linkToEdit.id >= 0) {
-    const indexToEdit = links.findIndex(
-      (linkObj) => linkObj.id === props.linkToEdit?.id
+  let response: AxiosResponse<any, any> | undefined = undefined;
+
+  //Add a new link, or edit an old one. -1 will mean it's a new one needing an id.
+  if (linkToAddOrEdit.id === -1 || linkToAddOrEdit.id === undefined) {
+    linkToAddOrEdit.id = Math.floor(Date.now() / 1000);
+    console.log("new Link:", linkToAddOrEdit);
+
+    response = await axios.post(
+      `${import.meta.env.VITE_API_URL}`,
+      linkToAddOrEdit
     );
-    links[indexToEdit] = newLink;
-  } else {
-    alert("Negative link id. Cannot edit.");
-    return;
+    console.log(response);
+  } else if (linkToAddOrEdit.id) {
+    response = await axios.put(
+      `${import.meta.env.VITE_API_URL}`,
+      linkToAddOrEdit
+    );
+    console.log(response);
   }
 
-  console.log(links[links.length - 1]);
-  alert(newLink.displayName + " will be added. id: " + newLink.id);
-
-  setCookie("Links", JSON.stringify(links));
-  //location.reload();
+  if (response?.status !== 200) {
+    alert("Couldn't add or modify link");
+    console.warn(response);
+  }
+  else {
+    location.reload();
+  }
 }
 </script>
 

@@ -28,12 +28,7 @@ function linkClicked(indexOfLinkClicked: number) {
   const linksToUpdate: JobBoardLink[] = links.value;
 
   linksToUpdate[indexOfLinkClicked].timesClicked++;
-  const date = new Date();
-  linksToUpdate[indexOfLinkClicked].lastClicked = {
-    day: date.getDay(),
-    month: date.getMonth(),
-    year: date.getFullYear(),
-  };
+  linksToUpdate[indexOfLinkClicked].lastClicked = new Date();
 
   links.value = [...linksToUpdate];
   setCookie("Links", JSON.stringify(linksToUpdate));

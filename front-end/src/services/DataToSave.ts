@@ -18,11 +18,13 @@ export interface Application {
 
 //Quick links for searching that will appear in the right sidebar of this site
 export interface JobBoardLink {
+  id: number;
+  user: string;
+
   link: string;
   displayName: string;
   timesClicked: number;
-  lastClicked: { day: number; month: number; year: number };
-  id: number;
+  lastClicked?: Date;
 
   category: string;
   colour: string;

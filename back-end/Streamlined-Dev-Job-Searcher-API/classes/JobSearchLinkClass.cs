@@ -19,13 +19,16 @@ public class JobSearchLink
     [DynamoDBHashKey("Id")]
     public int Id { get; set; } = 0;
 
+    [DynamoDBLocalSecondaryIndexRangeKey("User")]
+    public string User {get; set;} = "guest";
+
     public string Link { get; set; } = "";
 
     public string DisplayName { get; set; } = "";
 
     public int TimesClicked { get; set; } = 0;
 
-    public DateTime LastClicked { get; set; } = DateTime.Now;
+    public DateTime? LastClicked { get; set; } = null;
 
     public string Category { get; set; } = "";
 
