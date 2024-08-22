@@ -79,7 +79,7 @@ namespace DynamoDB.Demo.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             var jobSearchLink = await _context.LoadAsync<JobSearchLink>(id);
             if (jobSearchLink == null) return NotFound();

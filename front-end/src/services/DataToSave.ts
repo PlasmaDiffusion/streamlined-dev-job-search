@@ -38,11 +38,10 @@ export function loadLinks() {
     return [];
   }
 
-
   const linkArray: JobBoardLink[] = JSON.parse(previousLinks);
-  linkArray.forEach((link)=>{
+  linkArray.forEach((link) => {
     console.log(link.displayName);
-  })
+  });
   return linkArray;
 }
 
@@ -55,19 +54,6 @@ export function loadApplications() {
 
   const linkArray: Application[] = JSON.parse(previousApplications);
   return linkArray;
-}
-
-export function removeLinkById(idToDelete: number) {
-  const links = loadLinks();
-
-  const indexToDelete = links.findIndex((linkObj) => {
-    linkObj.id === idToDelete;
-  });
-
-  links.splice(indexToDelete, 1);
-
-  setCookie("Links", JSON.stringify(links));
-  return links;
 }
 
 export function removeApplicationsAtIndex(indexToDelete: number) {

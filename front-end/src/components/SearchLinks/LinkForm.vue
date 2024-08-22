@@ -9,7 +9,7 @@ import "./ListOfLinks.scss";
 import { ref } from "vue";
 import { JobBoardLink, loadLinks } from "../../services/DataToSave";
 import InputField from "../CommonComponents/InputField.vue";
-import axios, { Axios, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 
 const emit = defineEmits(["closed"]);
 
@@ -17,7 +17,7 @@ const colour = ref(props.linkToEdit?.colour || "");
 const link = ref(props.linkToEdit?.link || "");
 const displayName = ref(props.linkToEdit?.displayName || "");
 const category = ref(props.linkToEdit?.category || "");
-const isCompanySite = ref(props.linkToEdit?.isCompanySite || false);
+const isCompanySite = ref(props.isForCompanySite);
 
 async function submit(this: any, event: any) {
   event.preventDefault();
@@ -126,7 +126,7 @@ async function submit(this: any, event: any) {
       />
 
       <label
-        ><b>Is Company Site {{ isForCompanySite }}</b></label
+        ><b>Is Company Site</b></label
       >
       <input
         type="checkbox"
