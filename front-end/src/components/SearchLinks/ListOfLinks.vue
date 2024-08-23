@@ -34,8 +34,8 @@ function linkClicked(link: JobBoardLink) {
   <section>
     <Modal
       v-if="linkRecentlyClicked"
-      :title="linkRecentlyClicked?.displayName"
-      message="Did you find and apply to roles to after clicking the link? (This will give the link +1 clicks, making it more likely to appear first on the list)."
+      :title="`${linkRecentlyClicked?.displayName} (${linkRecentlyClicked.category})`"
+      message="Did you find and apply to roles to after clicking the link? (This will give the link +1 clicks, making it more likely to appear first on the list)"
       leftOption="No"
       rightOption="Yes"
       @on-click-left-option="
