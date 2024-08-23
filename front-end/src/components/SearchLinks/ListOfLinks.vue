@@ -32,6 +32,23 @@ function linkClicked(link: JobBoardLink) {
 
 <template>
   <section>
+    <Modal
+      v-if="linkRecentlyClicked"
+      :title="linkRecentlyClicked?.displayName"
+      message="Did you find and apply to roles to after clicking the link? (This will give the link +1 clicks, making it more likely to appear first on the list)."
+      leftOption="No"
+      rightOption="Yes"
+      @on-click-left-option="
+        () => {
+          linkRecentlyClicked = undefined;
+        }
+      "
+      @on-click-right-option="
+        () => {
+          //PUT request onto the server to update times clicked
+        }
+      "
+    />
     <h2 v-if="!editing && !addingNewLink">
       {{
         `Quick ${
@@ -39,7 +56,7 @@ function linkClicked(link: JobBoardLink) {
         } Links`
       }}
     </h2>
-    <div v-for="(link, index) in links" :key="link.id">
+    <div v-for="(link) in links" :key="link.id">
       <div v-if="link.isCompanySite === listIsForCompanySiteLinks">
         <div
           v-if="!editing && checkIfNewCategory(link.category)"
@@ -95,21 +112,5 @@ function linkClicked(link: JobBoardLink) {
         }
       "
     />
-    <Modal
-      :title="linkRecentlyClicked?.displayName"
-      message="Did you find and apply to roles to after clicking the link? (This will give the link +1 clicks, making it more likely to appear first on the list)."
-      leftOption="No"
-      rightOption="Yes"
-      :@on-on-click-left-option="
-        () => {
-          linkRecentlyClicked = undefined;
-        }
-      "
-      :@on-click-right-option="
-        () => {
-          //PUT request onto the server to update times clicked
-        }
-      "
-    ></Modal>
   </section>
 </template>
