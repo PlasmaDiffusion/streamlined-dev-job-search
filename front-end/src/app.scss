@@ -49,8 +49,13 @@ button, input[type="submit"] {
 }
 
 button:hover, input[type="submit"]:hover {
-  background-color:$secondary;
+  background-color: $secondary;
   color: $background2;
+}
+
+button:active, input[type="submit"]:active {
+  background-color: $secondary;
+  border: 1px inset;
 }
 
 h1 {

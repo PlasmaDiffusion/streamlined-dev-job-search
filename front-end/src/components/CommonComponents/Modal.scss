@@ -1,0 +1,19 @@
+@import "../../variables.scss";
+
+.modal {
+  border: 1px dashed $primary;
+  background-color: $modalBackground;
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: center;
+  button {
+    width: 10rem;
+    font-size: 16pt;
+    margin-bottom: 0;
+  }
+}

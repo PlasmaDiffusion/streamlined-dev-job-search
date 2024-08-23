@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const emit = defineEmits(["onClickLeftOption", "onClickRightOption"]);
+import "./Modal.scss";
 
 defineProps({
   title: { type: String, required: false },
@@ -10,13 +11,13 @@ defineProps({
 </script>
 
 <template>
-  <section>
+  <section class="modal">
     <h2>{{ title }}</h2>
     <p>{{ message }}</p>
     <div v-if="!leftOption && !rightOption">
       <button>Okay</button>
     </div>
-    <div v-if="leftOption && rightOption">
+    <div v-if="leftOption && rightOption" class="buttonRow">
       <button
         :onclick="
           () => {
