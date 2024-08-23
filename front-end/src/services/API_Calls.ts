@@ -6,7 +6,6 @@ export interface FetchedLinksResponse {
   jobBoardLinks: JobBoardLink[];
 }
 
-
 //DELETE /api/JobSearchLinks/{id}
 export async function removeLinkById(
   links: JobBoardLink[],
@@ -39,3 +38,9 @@ export async function removeLinkById(
 
 //PUT /api/JobSearchLinks
 
+export async function markLinkAsClicked(linkClicked: JobBoardLink) {
+
+  linkClicked.timesClicked += 1;
+  const response = await axios.patch(`${import.meta.env.VITE_API_URL}/updateLastClickedDate`, linkClicked);
+  console.log(response);
+}

@@ -3,8 +3,9 @@ import { ref } from "vue";
 import { JobBoardLink } from "../../services/DataToSave";
 import LinkForm from "./LinkForm.vue";
 import CustomLink from "./CustomLink.vue";
-import { removeLinkById } from "../../services/API_Calls";
+import { markLinkAsClicked, removeLinkById } from "../../services/API_Calls";
 import Modal from "../CommonComponents/Modal.vue";
+
 const props = defineProps({
   fetchedLinks: { type: Object as () => JobBoardLink[], required: true },
   showHelp: { type: Boolean, required: true },
@@ -44,8 +45,11 @@ function linkClicked(link: JobBoardLink) {
         }
       "
       @on-click-right-option="
-        () => {
-          //PUT request onto the server to update times clicked
+        async () => {
+          if (linkRecentlyClicked) {
+            await markLinkAsClicked(linkRecentlyClicked);
+            linkRecentlyClicked = undefined;
+          }
         }
       "
     />
@@ -56,7 +60,7 @@ function linkClicked(link: JobBoardLink) {
         } Links`
       }}
     </h2>
-    <div v-for="(link) in links" :key="link.id">
+    <div v-for="link in links" :key="link.id">
       <div v-if="link.isCompanySite === listIsForCompanySiteLinks">
         <div
           v-if="!editing && checkIfNewCategory(link.category)"

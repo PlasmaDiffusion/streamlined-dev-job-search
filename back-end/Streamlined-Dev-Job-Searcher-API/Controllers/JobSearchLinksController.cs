@@ -70,7 +70,7 @@ namespace DynamoDB.Demo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(JobSearchLink request)
+        public async Task<IActionResult> Create(JobSearchLink request, string? updateLastClickedDate)
         {
             var jobSearchLink = await _context.LoadAsync<JobSearchLink>(request.Id);
             if (jobSearchLink != null) return BadRequest($"JobSearchLink with Id {request.Id} Already Exists");
@@ -87,9 +87,14 @@ namespace DynamoDB.Demo.Controllers
             return NoContent();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(JobSearchLink request)
+        [HttpPatch("{updateLastClickedDate?}")]
+        public async Task<IActionResult> Update(JobSearchLink request, string updateLastClickedDate = "")
         {
+            if (updateLastClickedDate != "")
+            {
+                request.LastClicked = DateTime.Now;
+            }
+
             var jobSearchLink = await _context.LoadAsync<JobSearchLink>(request.Id);
             if (jobSearchLink == null) return NotFound();
             await _context.SaveAsync(request);

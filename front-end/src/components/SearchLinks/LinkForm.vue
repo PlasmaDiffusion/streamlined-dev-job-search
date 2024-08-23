@@ -7,7 +7,7 @@ const props = defineProps({
 
 import "./ListOfLinks.scss";
 import { ref } from "vue";
-import { JobBoardLink, loadLinks } from "../../services/DataToSave";
+import { JobBoardLink } from "../../services/DataToSave";
 import InputField from "../CommonComponents/InputField.vue";
 import axios, { AxiosResponse } from "axios";
 
@@ -29,7 +29,7 @@ async function submit(this: any, event: any) {
     category: category.value,
     colour: colour.value || "blue",
     isCompanySite: isCompanySite.value,
-    timesClicked: 0,
+    timesClicked: props.linkToEdit?.timesClicked || 0,
     id: props.linkToEdit?.id || -1,
     lastClicked: undefined,
   };
@@ -39,7 +39,6 @@ async function submit(this: any, event: any) {
   //Add a new link, or edit an old one. -1 will mean it's a new one needing an id.
   if (linkToAddOrEdit.id === -1 || linkToAddOrEdit.id === undefined) {
     linkToAddOrEdit.id = Math.floor(Date.now() / 1000);
-    console.log("new Link:", linkToAddOrEdit);
 
     response = await axios.post(
       `${import.meta.env.VITE_API_URL}`,
@@ -47,7 +46,7 @@ async function submit(this: any, event: any) {
     );
     console.log(response);
   } else if (linkToAddOrEdit.id) {
-    response = await axios.put(
+    response = await axios.patch(
       `${import.meta.env.VITE_API_URL}`,
       linkToAddOrEdit
     );
