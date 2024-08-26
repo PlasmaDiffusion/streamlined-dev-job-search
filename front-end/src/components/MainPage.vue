@@ -10,9 +10,10 @@ import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ListOfLinks from "./SearchLinks/ListOfLinks.vue";
 import TestGraph from "./Analytics/TestGraph.vue";
-import { FetchedLinksResponse } from "../services/API_Calls.ts";
+import { fetchCurrentMonthApplications, FetchedLinksResponse, fetchLinks } from "../services/API_Calls.ts";
 import "./MainPage.scss";
 import Loading from "./CommonComponents/Loading.vue";
+import { JobApplication } from "../services/DataToSave.ts";
 
 const route = useRoute();
 const helpChecked = ref(false);
@@ -22,16 +23,19 @@ const fetchedLinks = ref<FetchedLinksResponse>({
   companySiteLinks: [],
   jobBoardLinks: [],
 });
+const fetchedApplications = ref<JobApplication>([]);
 
 // watch the params of the route to fetch the data again
 watch(() => route, fetchData, { immediate: true });
 
 async function fetchData() {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}`);
+    const response = await fetchLinks();
     fetchedLinks.value = response.data;
+    const responseApplications = await fetchCurrentMonthApplications();
+    fetchedApplications.value = responseApplications.data;
     loading.value = false;
-  } catch (e) {
+ } catch (e) {
     error.value = true;
     console.warn(e);
   }

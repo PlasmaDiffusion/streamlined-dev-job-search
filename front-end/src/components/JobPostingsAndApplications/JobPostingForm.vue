@@ -7,7 +7,7 @@ import "./JobPostingForm.scss";
 import { parseJobPosting } from "../../services/ParseJobPosting";
 import { ref } from "vue";
 import {
-  Application,
+  JobApplication,
   JobBoardLink,
   loadApplications,
 } from "../../services/DataToSave";
@@ -24,13 +24,13 @@ function submit(event: Event) {
   event.preventDefault();
   const applications = loadApplications();
 
-  const newApplication: Application = {
+  const newApplication: JobApplication = {
     jobTitle: "",
     company: "",
     date: "",
-    linkOfPosting: "",
+    linkToPosting: "",
     sitePostingCameFrom: "",
-    posting: "",
+    jobDescription: "",
     id: 0,
     tags: [],
     applied: false,

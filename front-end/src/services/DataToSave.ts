@@ -1,15 +1,15 @@
 import { getCookie, setCookie } from "./CookieManager";
 
 //Applications to be saved into a table
-export interface Application {
+export interface JobApplication {
   jobTitle: string;
   company: string;
   date: string;
   id: number;
 
-  linkOfPosting: string;
+  linkToPosting: string;
   sitePostingCameFrom?: string;
-  posting: string;
+  jobDescription: string;
   tags?: string[];
 
   applied: boolean;
@@ -52,7 +52,7 @@ export function loadApplications() {
     return [];
   }
 
-  const linkArray: Application[] = JSON.parse(previousApplications);
+  const linkArray: JobApplication[] = JSON.parse(previousApplications);
   return linkArray;
 }
 
