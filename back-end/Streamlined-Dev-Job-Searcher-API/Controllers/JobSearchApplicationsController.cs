@@ -42,9 +42,8 @@ namespace DynamoDB.Demo.Controllers
             DateTime today = DateTime.Now;
 
 
-
-            ScanCondition isMonthCondition = new ScanCondition("DateApplied", ScanOperator.Contains, today.Month);
-            ScanCondition isYearCondition = new ScanCondition("DateApplied", ScanOperator.Contains, today.Year);
+            ScanCondition isMonthCondition = new ScanCondition("DateApplied", ScanOperator.Contains, today.Month.ToString());
+            ScanCondition isYearCondition = new ScanCondition("DateApplied", ScanOperator.Contains, today.Year.ToString());
 
 
             var jobApplications = await _context.ScanAsync<JobApplication>([isMonthCondition, isYearCondition]).GetRemainingAsync();

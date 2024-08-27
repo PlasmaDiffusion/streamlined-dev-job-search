@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import axios from "axios";
-
 defineProps({
   msg: String,
 });
@@ -10,7 +8,11 @@ import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ListOfLinks from "./SearchLinks/ListOfLinks.vue";
 import TestGraph from "./Analytics/TestGraph.vue";
-import { fetchCurrentMonthApplications, FetchedLinksResponse, fetchLinks } from "../services/API_Calls.ts";
+import {
+  fetchCurrentMonthApplications,
+  FetchedLinksResponse,
+  fetchLinks,
+} from "../services/API_Calls.ts";
 import "./MainPage.scss";
 import Loading from "./CommonComponents/Loading.vue";
 import { JobApplication } from "../services/DataToSave.ts";
@@ -18,27 +20,30 @@ import { JobApplication } from "../services/DataToSave.ts";
 const route = useRoute();
 const helpChecked = ref(false);
 const loading = ref(true);
-const error = ref(false);
+const linkError = ref(false);
+const applicationError = ref(false);
+
 const fetchedLinks = ref<FetchedLinksResponse>({
   companySiteLinks: [],
   jobBoardLinks: [],
 });
-const fetchedApplications = ref<JobApplication>([]);
+const fetchedApplications = ref<JobApplication[]>([]);
 
 // watch the params of the route to fetch the data again
 watch(() => route, fetchData, { immediate: true });
 
 async function fetchData() {
-  try {
-    const response = await fetchLinks();
-    fetchedLinks.value = response.data;
-    const responseApplications = await fetchCurrentMonthApplications();
-    fetchedApplications.value = responseApplications.data;
-    loading.value = false;
- } catch (e) {
-    error.value = true;
-    console.warn(e);
+  const responseForLinks = await fetchLinks();
+  if (!responseForLinks) {
+    linkError.value = true;
   }
+  fetchedLinks.value = responseForLinks?.data || {};
+  const responseForApplications = await fetchCurrentMonthApplications();
+  if (!responseForApplications) {
+    applicationError.value = true;
+  }
+  fetchedApplications.value = responseForApplications?.data || [];
+  loading.value = false;
 }
 </script>
 
@@ -52,7 +57,11 @@ async function fetchData() {
           :fetched-links="fetchedLinks.companySiteLinks"
           listIsForCompanySiteLinks
         />
-        <Loading :loading=loading :error=error error-message="Couldn't fetch links. Server might be down." />
+        <Loading
+          :loading="loading"
+          :error="linkError"
+          error-message="Couldn't fetch links. Server might be down."
+        />
       </div>
 
       <div id="jobApplicationSection">
@@ -67,7 +76,7 @@ async function fetchData() {
           :showHelp="helpChecked"
           :fetched-links="fetchedLinks.jobBoardLinks"
         />
-        <Loading :loading=loading :error=error error-message="" />
+        <Loading :loading="loading" :error="linkError" error-message="" />
       </div>
     </div>
 
