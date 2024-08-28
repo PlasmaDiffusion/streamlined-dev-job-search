@@ -16,6 +16,7 @@ const links = ref<JobBoardLink[]>(props.fetchedLinks);
 const editing = ref<JobBoardLink>();
 const addingNewLink = ref(false);
 const linkRecentlyClicked = ref<JobBoardLink>();
+
 let currentCategory = "";
 
 function checkIfNewCategory(category: string) {
@@ -28,6 +29,15 @@ function checkIfNewCategory(category: string) {
 
 function linkClicked(link: JobBoardLink) {
   linkRecentlyClicked.value = link;
+}
+
+async function deleteClicked(link: JobBoardLink) {
+  if (window.confirm(`Delete ${link.displayName}?`)) {
+    const updatedLinkArray = await removeLinkById(links.value, link.id);
+    if (updatedLinkArray) {
+      links.value = [...updatedLinkArray];
+    }
+  }
 }
 </script>
 
@@ -78,11 +88,8 @@ function linkClicked(link: JobBoardLink) {
             }
           "
           @onDeleteClicked="
-            async () => {
-              const updatedLinkArray = await removeLinkById(links, link.id);
-              if (updatedLinkArray) {
-                links = [...updatedLinkArray];
-              }
+            () => {
+              deleteClicked(link);
             }
           "
           @onLinkClicked="

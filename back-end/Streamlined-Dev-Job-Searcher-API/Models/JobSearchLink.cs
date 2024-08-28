@@ -1,3 +1,4 @@
+using System.Drawing;
 using Amazon.DynamoDBv2.DataModel;
 
 
@@ -6,7 +7,6 @@ namespace StreamlinedJobSearcher.Classes;
 [DynamoDBTable("JobSearchLinks")]
 public class JobSearchLink
 {
-    private float id;
 
     public JobSearchLink(int id, string link, string displayName, int timesClicked,
     DateTime lastClicked, string category, string colour, bool isCompanySite) =>
@@ -17,18 +17,21 @@ public class JobSearchLink
     {
     }
 
-    public JobSearchLink(float id, string link, string displayName)
+    public JobSearchLink(int id, string link, string displayName, string category, string colour, bool isCompanySite)
     {
-        this.id = id;
+        Id = id;
         Link = link;
         DisplayName = displayName;
+        Category = category;
+        Colour = colour;
+        IsCompanySite = isCompanySite;
     }
 
     [DynamoDBHashKey("Id")]
     public int Id { get; set; } = 0;
 
     [DynamoDBLocalSecondaryIndexRangeKey("User")]
-    public string User {get; set;} = "guest";
+    public string User { get; set; } = "guest";
 
     public string Link { get; set; } = "";
 
@@ -41,7 +44,7 @@ public class JobSearchLink
     public string Category { get; set; } = "";
 
     public string Colour { get; set; } = "";
-    
+
     public bool IsCompanySite { get; set; } = false;
 
 

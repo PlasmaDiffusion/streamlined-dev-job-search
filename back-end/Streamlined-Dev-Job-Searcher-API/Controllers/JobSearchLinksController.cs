@@ -107,22 +107,15 @@ namespace DynamoDB.Demo.Controllers
         [HttpGet("generateBulkCompanies")]
         public async Task<IActionResult> CreateFromFile()
         {
-
             //Get already existing companies, and if they exist remove them from the source
             ScanCondition isCompanySiteCondition = new ScanCondition("IsCompanySite", ScanOperator.Equal, true);
             List<JobSearchLink> existingCompanyJobSearchLinks = await _context.ScanAsync<JobSearchLink>([isCompanySiteCondition]).GetRemainingAsync();
-            ReadJsonFile reader = new ReadJsonFile(existingCompanyJobSearchLinks, "../Files/companies.json");
+            ReadJsonFile reader = new ReadJsonFile(existingCompanyJobSearchLinks, "./Files/companies.json");
 
-            List<JobSearchLink> linksToAdd = reader.LinksToAdd;
-
-            /* TODO: Add links to dynamodb in bulk?
-            var jobSearchLink = await _context.LoadAsync<JobSearchLink>(request.Id);
-            if (jobSearchLink != null) return BadRequest($"JobSearchLink with Id {request.Id} Already Exists");
-            await _context.SaveAsync(request);
-            return Ok(request);
-            */
-            return Ok("");
-
+            var bookBatch = _context.CreateBatchWrite<JobSearchLink>();
+            bookBatch.AddPutItems(reader.LinksToAdd);
+            await bookBatch.ExecuteAsync();
+            return Ok(reader.LinksToAdd);
         }
     }
 }

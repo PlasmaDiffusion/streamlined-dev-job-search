@@ -12,13 +12,13 @@ export async function removeLinkById(
   idToDelete: number
 ) {
   const response = await axios.delete(
-    `${import.meta.env.VITE_API_URL}/${idToDelete}`
+    `${import.meta.env.VITE_API_URL}/JobSearchLinks/${idToDelete}`
   );
 
   if (response.status === 204) {
-    const indexToDelete = links.findIndex((linkObj) => {
-      linkObj.id === idToDelete;
-    });
+    const indexToDelete = links.findIndex(
+      (linkObj) => linkObj.id === idToDelete
+    );
 
     links.splice(indexToDelete, 1);
 
