@@ -6,6 +6,7 @@ namespace StreamlinedJobSearcher.Classes;
 [DynamoDBTable("JobSearchLinks")]
 public class JobSearchLink
 {
+    private float id;
 
     public JobSearchLink(int id, string link, string displayName, int timesClicked,
     DateTime lastClicked, string category, string colour, bool isCompanySite) =>
@@ -14,6 +15,13 @@ public class JobSearchLink
 
     public JobSearchLink()
     {
+    }
+
+    public JobSearchLink(float id, string link, string displayName)
+    {
+        this.id = id;
+        Link = link;
+        DisplayName = displayName;
     }
 
     [DynamoDBHashKey("Id")]

@@ -1,4 +1,5 @@
-﻿using Amazon.DynamoDBv2;
+﻿using System.Text.Json;
+using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
@@ -36,7 +37,7 @@ namespace DynamoDB.Demo.Controllers
         {
             var jobSearchLinks = await _context.ScanAsync<JobSearchLink>(default).GetRemainingAsync();
             jobSearchLinks = JobSearchLink.SortLinksByTotalClicksInCategory(jobSearchLinks);
-            
+
             var jobBoardLinks = new List<JobSearchLink>(jobSearchLinks);
             var companySiteLinks = new List<JobSearchLink>(jobSearchLinks);
 
@@ -50,9 +51,9 @@ namespace DynamoDB.Demo.Controllers
         [HttpGet("CompanySite")]
         public async Task<IActionResult> GetAllCompanyLinks()
         {
-            ScanCondition isNonCompanySiteCondition = new ScanCondition("IsCompanySite", ScanOperator.Equal, true);
+            ScanCondition isCompanySiteCondition = new ScanCondition("IsCompanySite", ScanOperator.Equal, true);
 
-            var jobSearchLinks = await _context.ScanAsync<JobSearchLink>([isNonCompanySiteCondition]).GetRemainingAsync();
+            var jobSearchLinks = await _context.ScanAsync<JobSearchLink>([isCompanySiteCondition]).GetRemainingAsync();
             jobSearchLinks = JobSearchLink.SortLinksByTotalClicksInCategory(jobSearchLinks);
 
             return Ok(jobSearchLinks);
@@ -70,7 +71,7 @@ namespace DynamoDB.Demo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(JobSearchLink request, string? updateLastClickedDate)
+        public async Task<IActionResult> Create(JobSearchLink request)
         {
             var jobSearchLink = await _context.LoadAsync<JobSearchLink>(request.Id);
             if (jobSearchLink != null) return BadRequest($"JobSearchLink with Id {request.Id} Already Exists");
@@ -99,6 +100,29 @@ namespace DynamoDB.Demo.Controllers
             if (jobSearchLink == null) return NotFound();
             await _context.SaveAsync(request);
             return Ok(request);
+        }
+
+
+
+        [HttpGet("generateBulkCompanies")]
+        public async Task<IActionResult> CreateFromFile()
+        {
+
+            //Get already existing companies, and if they exist remove them from the source
+            ScanCondition isCompanySiteCondition = new ScanCondition("IsCompanySite", ScanOperator.Equal, true);
+            List<JobSearchLink> existingCompanyJobSearchLinks = await _context.ScanAsync<JobSearchLink>([isCompanySiteCondition]).GetRemainingAsync();
+            ReadJsonFile reader = new ReadJsonFile(existingCompanyJobSearchLinks, "../Files/companies.json");
+
+            List<JobSearchLink> linksToAdd = reader.LinksToAdd;
+
+            /* TODO: Add links to dynamodb in bulk?
+            var jobSearchLink = await _context.LoadAsync<JobSearchLink>(request.Id);
+            if (jobSearchLink != null) return BadRequest($"JobSearchLink with Id {request.Id} Already Exists");
+            await _context.SaveAsync(request);
+            return Ok(request);
+            */
+            return Ok("");
+
         }
     }
 }
