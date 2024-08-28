@@ -1,5 +1,6 @@
 using System.Drawing;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.Model;
 
 
 namespace StreamlinedJobSearcher.Classes;
@@ -71,6 +72,6 @@ public class JobSearchLink
 
     public static List<JobSearchLink> SortLinksByTotalClicksInCategory(List<JobSearchLink> links)
     {
-        return links.OrderBy(link => link.Category).ThenBy(link => link.TimesClicked).ToList();
+        return links.OrderByDescending(link => link.TimesClicked).ThenBy(link => link.Category).ToList();
     }
 }
