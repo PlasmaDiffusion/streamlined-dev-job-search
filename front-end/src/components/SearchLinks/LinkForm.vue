@@ -120,7 +120,7 @@ async function submit(this: any, event: any) {
       <div class="category" :style="{ color: colour }">{{ category }}:</div>
       <div class="linkSection" :style="{ color: colour }">
         <span class="linkIcon">➤ </span><a :href="link">{{ displayName }}</a>
-        <span class="timesClicked"> (0 clicks)</span>
+        <span class="timesClicked"> (0)</span>
       </div>
     </div>
   </section>

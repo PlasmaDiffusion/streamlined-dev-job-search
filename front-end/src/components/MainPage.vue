@@ -6,7 +6,6 @@ defineProps({
   msg: String,
 });
 
-import JobPostingForm from "./JobPostingsAndApplications/JobApplicationForm.vue";
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ListOfLinks from "./SearchLinks/ListOfLinks.vue";

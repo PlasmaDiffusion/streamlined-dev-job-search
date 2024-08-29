@@ -3,7 +3,10 @@ import { ref } from "vue";
 import { JobBoardLink } from "../../Interfaces";
 import LinkForm from "./LinkForm.vue";
 import CustomLink from "./CustomLink.vue";
-import { markLinkAsClicked, removeLinkById } from "../../services/API/JobSearchLinksApiCalls";
+import {
+  markLinkAsClicked,
+  removeLinkById,
+} from "../../services/API/JobSearchLinksApiCalls";
 import Modal from "../CommonComponents/Modal.vue";
 
 const props = defineProps({
@@ -42,7 +45,14 @@ async function deleteClicked(link: JobBoardLink) {
 </script>
 
 <template>
-  <section class="overflow">
+  <section>
+    <h2 v-if="!editing && !addingNewLink" class="linkHeading">
+      {{
+        `${
+          listIsForCompanySiteLinks ? "Company Site" : "Job Board"
+        } Links`
+      }}
+    </h2>
     <Modal
       v-if="linkRecentlyClicked"
       :title="`${linkRecentlyClicked?.displayName} (${linkRecentlyClicked.category})`"
@@ -63,41 +73,36 @@ async function deleteClicked(link: JobBoardLink) {
         }
       "
     />
-    <h2 v-if="!editing && !addingNewLink">
-      {{
-        `Quick ${
-          listIsForCompanySiteLinks ? "Company Site" : "Job Board"
-        } Links`
-      }}
-    </h2>
-    <div v-for="link in links" :key="link.id">
-      <div v-if="link.isCompanySite === listIsForCompanySiteLinks">
-        <div
-          v-if="!editing && checkIfNewCategory(link.category)"
-          class="category"
-          :style="{ color: link.colour }"
-        >
-          {{ link.category }}:
+    <div class="overflow">
+      <div v-for="link in links" :key="link.id">
+        <div v-if="link.isCompanySite === listIsForCompanySiteLinks">
+          <div
+            v-if="!editing && checkIfNewCategory(link.category)"
+            class="category"
+            :style="{ color: link.colour }"
+          >
+            {{ link.category }}:
+          </div>
+          <CustomLink
+            v-if="!editing && !addingNewLink"
+            :link="link"
+            @onEditClicked="
+              () => {
+                editing = link;
+              }
+            "
+            @onDeleteClicked="
+              () => {
+                deleteClicked(link);
+              }
+            "
+            @onLinkClicked="
+              () => {
+                linkClicked(link);
+              }
+            "
+          />
         </div>
-        <CustomLink
-          v-if="!editing && !addingNewLink"
-          :link="link"
-          @onEditClicked="
-            () => {
-              editing = link;
-            }
-          "
-          @onDeleteClicked="
-            () => {
-              deleteClicked(link);
-            }
-          "
-          @onLinkClicked="
-            () => {
-              linkClicked(link);
-            }
-          "
-        />
       </div>
     </div>
 

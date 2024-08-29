@@ -1,15 +1,19 @@
 @import "../../variables.scss";
 
-
 .linkSection {
   color: white;
-  background-color: $background2
+  background-color: $background2;
+  margin-bottom: 1rem;
+}
+
+.linkHeading {
+  margin-bottom: 0;
 }
 
 a {
   text-decoration: underline;
+  font-size: 11pt;
 }
-
 
 .category {
   font-weight: 600;
@@ -34,37 +38,38 @@ a {
 }
 
 .cancel {
-    color: white;
-    background-color: black;
-    opacity: 0.33;
-    margin: 8px;
-    font-size: 1rem;
-    padding: 4px 8px;
+  color: white;
+  background-color: black;
+  opacity: 0.33;
+  margin: 8px;
+  font-size: 1rem;
+  padding: 4px 8px;
 }
 
 .overflow {
   overflow: auto;
   max-height: 35rem;
-
-
+  border-bottom: 1px dashed $secondary;
 }
 
-  /* width */
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $modalBackground;
+  border-radius: 4px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #3c3c78;
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #130392;
+}
