@@ -1,21 +1,25 @@
+
 <script setup lang="ts">
+//Handles fetching of links and applications, as well as settings like help
+
 defineProps({
   msg: String,
 });
 
-import JobPostingForm from "./JobPostingsAndApplications/JobPostingForm.vue";
+import JobPostingForm from "./JobPostingsAndApplications/JobApplicationForm.vue";
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ListOfLinks from "./SearchLinks/ListOfLinks.vue";
 import TestGraph from "./Analytics/TestGraph.vue";
 import {
-  fetchCurrentMonthApplications,
   FetchedLinksResponse,
   fetchLinks,
 } from "../services/API/JobSearchLinksApiCalls.ts";
 import "./MainPage.scss";
 import Loading from "./CommonComponents/Loading.vue";
-import { JobApplication } from "../services/DataToSave.ts";
+import { ApplicationFetchMethod, JobApplication } from "../Interfaces.ts";
+import { fetchCurrentMonthApplications } from "../services/API/JobApplicationsApiCalls.ts";
+import ListOfJobApplications from "./JobPostingsAndApplications/ListOfJobApplications.vue";
 
 const route = useRoute();
 const helpChecked = ref(false);
@@ -66,8 +70,7 @@ async function fetchData() {
 
       <div id="jobApplicationSection">
         <h1>Streamlined Dev Job Searcher</h1>
-        <JobPostingForm :showHelp="helpChecked" />
-        <h2>Jobs Entered</h2>
+        <ListOfJobApplications :showHelp="helpChecked" :fetchedApplications="fetchedApplications" :fetchMethod="ApplicationFetchMethod.THIS_MONTH" />
       </div>
 
       <div class="linksSection">

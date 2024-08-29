@@ -28,3 +28,10 @@ export interface JobApplication {
   applied: boolean;
   coverLetter?: string;
 }
+
+export enum ApplicationFetchMethod {
+  NONE,
+  THIS_MONTH,
+  THIS_YEAR,
+  ALL_TIME,
+}

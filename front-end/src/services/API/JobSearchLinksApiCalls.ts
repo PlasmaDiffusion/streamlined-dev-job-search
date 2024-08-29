@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { JobBoardLink } from "../../interfaces";
+import { JobBoardLink } from "../../Interfaces";
 
 export interface FetchedLinksResponse {
   companySiteLinks: JobBoardLink[];

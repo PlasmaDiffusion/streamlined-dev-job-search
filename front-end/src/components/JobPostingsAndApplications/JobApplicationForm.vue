@@ -1,16 +1,13 @@
 <script setup lang="ts">
-const props = defineProps({
+defineProps({
   showHelp: { type: Boolean, required: true },
-  postingToEdit: { type: Object as () => JobBoardLink, required: false },
+  applicationToEdit: { type: Object as () => JobApplication, required: false },
 });
-import "./JobPostingForm.scss";
+import "./JobApplicationForm.scss";
 import { parseJobPosting } from "../../services/ParseJobPosting";
 import { ref } from "vue";
-import {
-  JobApplication,
-  JobBoardLink,
-} from "../../interfaces";
-import { setCookie } from "../../services/CookieManager";
+import { JobApplication } from "../../Interfaces";
+import { createOrUpdateApplication } from "../../services/API/JobApplicationsApiCalls";
 
 const posting = ref("");
 const link = ref("");
@@ -21,9 +18,8 @@ const tags = ref("");
 
 function submit(event: Event) {
   event.preventDefault();
-  const applications = loadApplications();
 
-  const newApplication: JobApplication = {
+  const application: JobApplication = {
     jobTitle: "",
     company: "",
     date: "",
@@ -35,21 +31,9 @@ function submit(event: Event) {
     applied: false,
   };
 
-  newApplication.tags = tags.value.split(", ");
+  application.tags = tags.value.split(", ");
 
-  //Add a new job posting, or edit an old one. -1 will be the default id that then gets updated.
-  if (newApplication?.id === -1) {
-    newApplication.id = Date.now();
-    applications.push(newApplication);
-  } else if (props.postingToEdit?.id && props.postingToEdit?.id >= 0) {
-    applications[props.postingToEdit.id] = newApplication;
-  } else {
-    alert("Negative application id. Cannot edit.");
-    return;
-  }
-
-  setCookie("Applications", JSON.stringify(applications));
-  location.reload();
+  createOrUpdateApplication(application);
 }
 </script>
 

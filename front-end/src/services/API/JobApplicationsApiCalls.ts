@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { JobApplication } from "../../interfaces";
+import { JobApplication } from "../../Interfaces";
 
 
 //GET /api/JobApplications/{id}
