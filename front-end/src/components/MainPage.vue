@@ -12,7 +12,7 @@ import {
   fetchCurrentMonthApplications,
   FetchedLinksResponse,
   fetchLinks,
-} from "../services/API_Calls.ts";
+} from "../services/API/JobSearchLinksApiCalls.ts";
 import "./MainPage.scss";
 import Loading from "./CommonComponents/Loading.vue";
 import { JobApplication } from "../services/DataToSave.ts";

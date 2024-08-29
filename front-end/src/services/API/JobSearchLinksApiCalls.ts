@@ -1,5 +1,5 @@
-import axios from "axios";
-import { JobBoardLink } from "./DataToSave";
+import axios, { AxiosResponse } from "axios";
+import { JobBoardLink } from "../../interfaces";
 
 export interface FetchedLinksResponse {
   companySiteLinks: JobBoardLink[];
@@ -36,11 +36,36 @@ export async function fetchLinks() {
   return response;
 }
 
-//GET /api/JobSearchLinks/CompanySite
-
-//GET /api/JobSearchLinks/NonCompanySite
-
 //POST /api/JobSearchLinks
+export async function createOrUpdateLink(linkToAddOrEdit: JobBoardLink)
+{
+  let response: AxiosResponse<any, any> | undefined = undefined;
+
+  //Add a new link, or edit an old one. -1 will mean it's a new one needing an id.
+  if (linkToAddOrEdit.id === -1 || linkToAddOrEdit.id === undefined) {
+    linkToAddOrEdit.id = Math.floor(Date.now() / 1000);
+
+    response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/JobSearchLinks`,
+      linkToAddOrEdit
+    );
+    console.log(response);
+  } else if (linkToAddOrEdit.id) {
+    response = await axios.patch(
+      `${import.meta.env.VITE_API_URL}/JobSearchLinks`,
+      linkToAddOrEdit
+    );
+    console.log(response);
+  }
+
+  if (response?.status !== 200) {
+    alert("Couldn't add or modify link");
+    console.warn(response);
+  }
+  else {
+    location.reload();
+  }
+}
 
 //PUT /api/JobSearchLinks
 
@@ -54,23 +79,3 @@ export async function markLinkAsClicked(linkClicked: JobBoardLink) {
     .catch((e) => console.log(e));
   return response;
 }
-
-//GET /api/JobApplications/{id}
-
-//GET /api/JobApplications
-
-//GET /api/JobApplications/CurrentMonth
-export async function fetchCurrentMonthApplications() {
-  const response = await axios
-    .get(`${import.meta.env.VITE_API_URL}/JobApplications/currentMonth`)
-    .catch((e) => console.log(e));
-  console.log(response);
-
-  return response;
-}
-
-//GET /api/JobSearchLinks/NonCompanySite
-
-//POST /api/JobSearchLinks
-
-//PUT /api/JobSearchLinks

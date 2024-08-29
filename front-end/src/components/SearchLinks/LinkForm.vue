@@ -7,9 +7,9 @@ const props = defineProps({
 
 import "./ListOfLinks.scss";
 import { ref } from "vue";
-import { JobBoardLink } from "../../services/DataToSave";
+import { JobBoardLink } from "../../interfaces";
 import InputField from "../CommonComponents/InputField.vue";
-import axios, { AxiosResponse } from "axios";
+import { createOrUpdateLink } from "../../services/API/JobSearchLinksApiCalls";
 
 const emit = defineEmits(["closed"]);
 
@@ -24,7 +24,7 @@ async function submit(this: any, event: any) {
 
   const linkToAddOrEdit: JobBoardLink = {
     link: link.value,
-    user: 'guest',
+    user: "guest",
     displayName: displayName.value,
     category: category.value,
     colour: colour.value || "blue",
@@ -34,32 +34,7 @@ async function submit(this: any, event: any) {
     lastClicked: undefined,
   };
 
-  let response: AxiosResponse<any, any> | undefined = undefined;
-
-  //Add a new link, or edit an old one. -1 will mean it's a new one needing an id.
-  if (linkToAddOrEdit.id === -1 || linkToAddOrEdit.id === undefined) {
-    linkToAddOrEdit.id = Math.floor(Date.now() / 1000);
-
-    response = await axios.post(
-      `${import.meta.env.VITE_API_URL}`,
-      linkToAddOrEdit
-    );
-    console.log(response);
-  } else if (linkToAddOrEdit.id) {
-    response = await axios.patch(
-      `${import.meta.env.VITE_API_URL}`,
-      linkToAddOrEdit
-    );
-    console.log(response);
-  }
-
-  if (response?.status !== 200) {
-    alert("Couldn't add or modify link");
-    console.warn(response);
-  }
-  else {
-    location.reload();
-  }
+  createOrUpdateLink(linkToAddOrEdit);
 }
 </script>
 
@@ -124,9 +99,7 @@ async function submit(this: any, event: any) {
         @onUpdated="(e : any) => { colour = e.target.value; }"
       />
 
-      <label
-        ><b>Is Company Site</b></label
-      >
+      <label><b>Is Company Site</b></label>
       <input
         type="checkbox"
         v-model="isCompanySite"

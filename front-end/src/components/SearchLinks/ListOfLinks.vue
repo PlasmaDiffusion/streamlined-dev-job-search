@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { JobBoardLink } from "../../services/DataToSave";
+import { JobBoardLink } from "../../interfaces";
 import LinkForm from "./LinkForm.vue";
 import CustomLink from "./CustomLink.vue";
-import { markLinkAsClicked, removeLinkById } from "../../services/API_Calls";
+import { markLinkAsClicked, removeLinkById } from "../../services/API/JobSearchLinksApiCalls";
 import Modal from "../CommonComponents/Modal.vue";
 
 const props = defineProps({

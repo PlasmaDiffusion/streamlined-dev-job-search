@@ -9,8 +9,7 @@ import { ref } from "vue";
 import {
   JobApplication,
   JobBoardLink,
-  loadApplications,
-} from "../../services/DataToSave";
+} from "../../interfaces";
 import { setCookie } from "../../services/CookieManager";
 
 const posting = ref("");

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { JobBoardLink } from "../../services/DataToSave.ts";
+import { JobBoardLink } from "../../interfaces";
 
 defineProps({
   link: { type: Object as () => JobBoardLink, required: true },
