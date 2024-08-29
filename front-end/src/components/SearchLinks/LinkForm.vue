@@ -7,7 +7,7 @@ const props = defineProps({
 
 import "./ListOfLinks.scss";
 import { ref } from "vue";
-import { JobBoardLink } from "../../interfaces";
+import { JobBoardLink } from "../../Interfaces";
 import InputField from "../CommonComponents/InputField.vue";
 import { createOrUpdateLink } from "../../services/API/JobSearchLinksApiCalls";
 

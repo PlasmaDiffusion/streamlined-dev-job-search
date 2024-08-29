@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { JobBoardLink } from "../../interfaces";
+import { JobBoardLink } from "../../Interfaces";
 import LinkForm from "./LinkForm.vue";
 import CustomLink from "./CustomLink.vue";
 import { markLinkAsClicked, removeLinkById } from "../../services/API/JobSearchLinksApiCalls";
@@ -42,7 +42,7 @@ async function deleteClicked(link: JobBoardLink) {
 </script>
 
 <template>
-  <section>
+  <section class="overflow">
     <Modal
       v-if="linkRecentlyClicked"
       :title="`${linkRecentlyClicked?.displayName} (${linkRecentlyClicked.category})`"

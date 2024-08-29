@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { JobBoardLink } from "../../interfaces";
+import { JobBoardLink } from "../../Interfaces";
 
 defineProps({
   link: { type: Object as () => JobBoardLink, required: true },
