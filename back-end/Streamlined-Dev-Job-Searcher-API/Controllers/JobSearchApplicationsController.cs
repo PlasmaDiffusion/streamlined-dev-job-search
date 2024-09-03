@@ -52,9 +52,9 @@ namespace DynamoDB.Demo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(JobApplication request, string? updateLastClickedDate)
+        public async Task<IActionResult> Create(JobApplication request)
         {
-            var jobApplication = await _context.LoadAsync<JobApplication>(request.Id);
+            var jobApplication = await _context.LoadAsync<JobApplication>(request.Id, request.User);
             if (jobApplication != null) return BadRequest($"JobApplication with Id {request.Id} Already Exists");
             await _context.SaveAsync(request);
             return Ok(request);

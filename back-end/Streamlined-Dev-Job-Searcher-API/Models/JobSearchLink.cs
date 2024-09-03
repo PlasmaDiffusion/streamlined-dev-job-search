@@ -31,7 +31,6 @@ public class JobSearchLink
     [DynamoDBHashKey("Id")]
     public int Id { get; set; } = 0;
 
-    [DynamoDBLocalSecondaryIndexRangeKey("User")]
     public string User { get; set; } = "guest";
 
     public string Link { get; set; } = "";

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { ApplicationFetchMethod, JobApplication } from "../../Interfaces";
 import JobApplicationForm from "./JobApplicationForm.vue";
-import { removeApplicationById } from "../../services/API/JobApplicationsApiCalls";
+import { removeApplicationById } from "../../services/API/JobSearchApplicationsApiCalls";
 
 const props = defineProps({
   fetchedApplications: {
@@ -44,14 +44,13 @@ async function deleteClicked(application: JobApplication) {
     <h2 v-if="props.fetchMethod > 0">
       {{ currentTitle }}
     </h2>
-    <div v-for="link in links" :key="link.id">
-      <div v-if="link.isCompanySite === listIsForCompanySiteLinks">
+    <div v-for="application in fetchedApplications" :key="link.id">
         <div
           v-if="!editing && checkIfNewCategory(link.category)"
           class="category"
           :style="{ color: link.colour }"
         >
-          {{ link.category }}:
+          {{ application.category }}:
         </div>
         <CustomLink
           v-if="!editing && !addingNewLink"
@@ -72,7 +71,6 @@ async function deleteClicked(application: JobApplication) {
             }
           "
         />
-      </div>
     </div>
   </section>
 </template>

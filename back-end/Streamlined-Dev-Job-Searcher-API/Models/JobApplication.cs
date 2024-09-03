@@ -3,7 +3,7 @@ using Amazon.DynamoDBv2.DataModel;
 
 namespace StreamlinedJobSearcher.Classes;
 
-[DynamoDBTable("JobApplication")]
+[DynamoDBTable("JobApplications")]
 public class JobApplication
 {
 
@@ -18,7 +18,7 @@ public class JobApplication
     [DynamoDBHashKey("Id")]
     public int Id { get; set; } = 0;
 
-    [DynamoDBLocalSecondaryIndexRangeKey("User")]
+    [DynamoDBRangeKey("User")]
     public string User { get; set; } = "guest";
 
     public string JobTitle { get; set; } = "";

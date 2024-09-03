@@ -7,11 +7,10 @@ import "./JobApplicationForm.scss";
 import { parseJobPosting } from "../../services/ParseJobPosting";
 import { ref } from "vue";
 import { JobApplication } from "../../Interfaces";
-import { createOrUpdateApplication } from "../../services/API/JobApplicationsApiCalls";
-
+import { createOrUpdateApplication } from "../../services/API/JobSearchApplicationsApiCalls";
+import InputField from "../CommonComponents/InputField.vue";
 const posting = ref("");
 const link = ref("");
-const sitePostingCameFrom = ref("");
 const jobTitle = ref("");
 const company = ref("");
 const tags = ref("");
@@ -26,7 +25,7 @@ function submit(event: Event) {
     linkToPosting: "",
     sitePostingCameFrom: "",
     jobDescription: "",
-    id: 0,
+    id: -1,
     tags: [],
     applied: false,
   };
@@ -59,22 +58,27 @@ function submit(event: Event) {
       >
       <br />
 
-      <input v-model="link" placeholder="Link" />
-      <label class="help" v-if="showHelp"
-        >^ Copy and paste the link so you can find it later.</label
-      >
-
-      <br />
-
-      <input
-        v-model="sitePostingCameFrom"
-        placeholder="Site Posting Came From"
+      <InputField
+        label="Link"
+        :showHelp="showHelp"
+        helpText="^ Copy and paste the link to the posting so you can find it later."
+        :value="link"
+        @onUpdated="(e : any) => { link = e.target.value; }"
       />
-      <br />
 
-      <input v-model="jobTitle" placeholder="Job Title" required />
+      <InputField
+        label="Job Title"
+        :showHelp="showHelp"
+        :value="jobTitle"
+        @onUpdated="(e : any) => { jobTitle = e.target.value; }"
+      />
 
-      <br />
+      <InputField
+        label="Company"
+        :showHelp="showHelp"
+        :value="jobTitle"
+        @onUpdated="(e : any) => { company = e.target.value; }"
+      />
 
       <input v-model="company" placeholder="Company" required />
 

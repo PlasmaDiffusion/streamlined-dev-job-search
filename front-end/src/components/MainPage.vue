@@ -17,7 +17,7 @@ import {
 import "./MainPage.scss";
 import Loading from "./CommonComponents/Loading.vue";
 import { ApplicationFetchMethod, JobApplication } from "../Interfaces.ts";
-import { fetchCurrentMonthApplications } from "../services/API/JobApplicationsApiCalls.ts";
+import { fetchCurrentMonthApplications } from "../services/API/JobSearchApplicationsApiCalls.ts";
 import ListOfJobApplications from "./JobPostingsAndApplications/ListOfJobApplications.vue";
 
 const route = useRoute();
