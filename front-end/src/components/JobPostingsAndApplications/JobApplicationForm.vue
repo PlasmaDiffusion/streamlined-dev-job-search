@@ -19,16 +19,18 @@ function submit(event: Event) {
   event.preventDefault();
 
   const application: JobApplication = {
-    jobTitle: "",
+    user: "guest",
+    dateApplied: "",
     company: "",
-    date: "",
+    jobTitle: "",
     linkToPosting: "",
     sitePostingCameFrom: "",
     jobDescription: "",
-    id: -1,
     tags: [],
     applied: false,
   };
+
+  console.log("event called", application);
 
   application.tags = tags.value.split(", ");
 

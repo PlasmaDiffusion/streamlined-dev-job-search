@@ -19,7 +19,7 @@ const displayName = ref(props.linkToEdit?.displayName || "");
 const category = ref(props.linkToEdit?.category || "");
 const isCompanySite = ref(props.isForCompanySite);
 
-async function submit(this: any, event: any) {
+async function submit(event: any) {
   event.preventDefault();
 
   const linkToAddOrEdit: JobBoardLink = {

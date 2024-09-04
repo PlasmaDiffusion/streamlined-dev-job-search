@@ -15,10 +15,12 @@ export interface JobBoardLink {
 
 //Applications to be saved into a table
 export interface JobApplication {
+  user: string;
+  dateApplied?: string;
+
+
   jobTitle: string;
   company: string;
-  date: string;
-  id: number;
 
   linkToPosting: string;
   sitePostingCameFrom?: string;

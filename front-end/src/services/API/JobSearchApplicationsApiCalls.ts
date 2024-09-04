@@ -28,11 +28,8 @@ export async function createOrUpdateApplication(
   applicationToAddOrEdit: JobApplication
 ) {
   //Add a new link, or edit an old one. -1 will mean it's a new one needing an id.
-  if (
-    applicationToAddOrEdit.id === -1 ||
-    applicationToAddOrEdit.id === undefined
-  ) {
-    applicationToAddOrEdit.id = Math.floor(Date.now() / 1000);
+  if (!applicationToAddOrEdit.dateApplied) {
+    console.log("Submitting", applicationToAddOrEdit);
 
     await axios
       .post(
@@ -41,7 +38,7 @@ export async function createOrUpdateApplication(
       )
       .then((res) => checkResponse(res, true))
       .catch((e) => console.warn(e));
-  } else if (applicationToAddOrEdit.id) {
+  } else if (applicationToAddOrEdit.dateApplied) {
     await axios
       .patch(
         `${import.meta.env.VITE_API_URL}/JobSearchApplications`,
@@ -55,15 +52,15 @@ export async function createOrUpdateApplication(
 //DELETE /api/JobSearchLinks/{id}
 export async function removeApplicationById(
   links: JobApplication[],
-  idToDelete: number
+  dateApplied: string
 ) {
   const response = await axios.delete(
-    `${import.meta.env.VITE_API_URL}/JobSearchApplications/${idToDelete}`
+    `${import.meta.env.VITE_API_URL}/JobSearchApplications/guest/${dateApplied}`
   );
 
   if (response.status === 204) {
     const indexToDelete = links.findIndex(
-      (linkObj) => linkObj.id === idToDelete
+      (linkObj) => linkObj.dateApplied === dateApplied
     );
 
     links.splice(indexToDelete, 1);

@@ -1,4 +1,4 @@
-import { JobBoardLink } from "./DataToSave";
+import { JobBoardLink } from "../Interfaces";
 
 export function sortLinksByCategory(links: JobBoardLink[]) {
   links.sort(function (a, b) {
