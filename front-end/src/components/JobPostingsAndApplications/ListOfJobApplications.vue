@@ -3,6 +3,8 @@ import { ref } from "vue";
 import { ApplicationFetchMethod, JobApplication } from "../../Interfaces";
 import JobApplicationForm from "./JobApplicationForm.vue";
 import { removeApplicationById } from "../../services/API/JobSearchApplicationsApiCalls";
+import ApplicationRow from "./ApplicationTable/ApplicationRow.vue";
+import ApplicationHeader from "./ApplicationTable/ApplicationHeader.vue";
 
 const props = defineProps({
   fetchedApplications: {
@@ -22,14 +24,13 @@ const titles = [
 
 const applications = ref<JobApplication[]>(props.fetchedApplications);
 const editing = ref<JobApplication>();
-const addingNewLink = ref(false);
 const currentTitle = titles[props.fetchMethod];
 
 async function deleteClicked(application: JobApplication) {
   if (window.confirm(`Delete application to ${application.company}?`)) {
     const updatedLinkArray = await removeApplicationById(
       applications.value,
-      application.id
+      application.dateApplied || ""
     );
     if (updatedLinkArray) {
       applications.value = [...updatedLinkArray];
@@ -39,20 +40,20 @@ async function deleteClicked(application: JobApplication) {
 </script>
 
 <template>
-  <JobApplicationForm :showHelp="showHelp" :applicationToEdit="editing" />
+  <JobApplicationForm v-if="editing" :showHelp="showHelp" :applicationToEdit="editing" />
   <section>
     <h2 v-if="props.fetchMethod > 0">
       {{ currentTitle }}
     </h2>
-    <div v-for="application in fetchedApplications" :key="link.id">
-        <div
-          v-if="!editing && checkIfNewCategory(link.category)"
-          class="category"
-          :style="{ color: link.colour }"
-        >
-          {{ application.category }}:
-        </div>
-        <CustomLink
+    <div class="applicationTable">
+    <table >
+      <ApplicationHeader/>
+      <tr
+        v-for="application in fetchedApplications"
+        :key="application.dateApplied"
+      >
+        <ApplicationRow :application="application" />
+        <!-- <CustomLink
           v-if="!editing && !addingNewLink"
           :link="link"
           @onEditClicked="
@@ -70,7 +71,9 @@ async function deleteClicked(application: JobApplication) {
               linkClicked(link);
             }
           "
-        />
-    </div>
+        /> -->
+      </tr>
+    </table>
+  </div>
   </section>
 </template>

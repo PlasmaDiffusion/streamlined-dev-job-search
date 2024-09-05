@@ -6,7 +6,7 @@ import { JobApplication } from "../../Interfaces";
 //GET /api/JobApplications
 export async function fetchAllApplications() {
   const response = await axios
-    .get(`${import.meta.env.VITE_API_URL}/JobApplications`)
+    .get(`${import.meta.env.VITE_API_URL}/JobSearchApplications`)
     .catch((e) => console.log(e));
   console.log(response);
 
@@ -16,7 +16,7 @@ export async function fetchAllApplications() {
 //GET /api/JobApplications/CurrentMonth
 export async function fetchCurrentMonthApplications() {
   const response = await axios
-    .get(`${import.meta.env.VITE_API_URL}/JobApplications/currentMonth`)
+    .get(`${import.meta.env.VITE_API_URL}/JobSearchApplications/currentMonth`)
     .catch((e) => console.log(e));
   console.log(response);
 
@@ -51,7 +51,7 @@ export async function createOrUpdateApplication(
 
 //DELETE /api/JobSearchLinks/{id}
 export async function removeApplicationById(
-  links: JobApplication[],
+  applications: JobApplication[],
   dateApplied: string
 ) {
   const response = await axios.delete(
@@ -59,13 +59,13 @@ export async function removeApplicationById(
   );
 
   if (response.status === 204) {
-    const indexToDelete = links.findIndex(
-      (linkObj) => linkObj.dateApplied === dateApplied
+    const indexToDelete = applications.findIndex(
+      (application) => application.dateApplied === dateApplied
     );
 
-    links.splice(indexToDelete, 1);
+    applications.splice(indexToDelete, 1);
 
-    return links;
+    return applications;
   }
 }
 

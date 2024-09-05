@@ -15,3 +15,12 @@ label {
   text-align: left;
   margin-left: 12px;
 }
+
+.applicationTable {
+  display: flex;
+  flex-direction: column;
+
+  table {
+    border-collapse: collapse;
+  }
+}

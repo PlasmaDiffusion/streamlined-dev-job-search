@@ -19,6 +19,7 @@ import Loading from "./CommonComponents/Loading.vue";
 import { ApplicationFetchMethod, JobApplication } from "../Interfaces.ts";
 import { fetchCurrentMonthApplications } from "../services/API/JobSearchApplicationsApiCalls.ts";
 import ListOfJobApplications from "./JobPostingsAndApplications/ListOfJobApplications.vue";
+import JobApplicationForm from "./JobPostingsAndApplications/JobApplicationForm.vue";
 
 const route = useRoute();
 const helpChecked = ref(false);
@@ -69,7 +70,7 @@ async function fetchData() {
 
       <div id="jobApplicationSection">
         <h1>Streamlined Dev Job Searcher</h1>
-        <ListOfJobApplications :showHelp="helpChecked" :fetchedApplications="fetchedApplications" :fetchMethod="ApplicationFetchMethod.THIS_MONTH" />
+        <JobApplicationForm :show-help="helpChecked"/>
       </div>
 
       <div class="linksSection">
@@ -81,6 +82,9 @@ async function fetchData() {
         <Loading :loading="loading" :error="linkError" error-message="" />
       </div>
     </div>
+
+    <ListOfJobApplications :showHelp="helpChecked" :fetchedApplications="fetchedApplications" :fetchMethod="ApplicationFetchMethod.THIS_MONTH" />
+
 
     <div class="settings">
       <p>Show Help</p>
