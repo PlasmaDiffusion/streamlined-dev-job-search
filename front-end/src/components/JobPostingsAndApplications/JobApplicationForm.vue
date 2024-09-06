@@ -9,11 +9,12 @@ import { ref } from "vue";
 import { JobApplication } from "../../Interfaces";
 import { createOrUpdateApplication } from "../../services/API/JobSearchApplicationsApiCalls";
 import InputField from "../CommonComponents/InputField.vue";
-const posting = ref("");
+const jobDescription = ref("");
 const link = ref("");
 const jobTitle = ref("");
 const company = ref("");
 const tags = ref("");
+const applied = ref(true);
 
 function submit(event: Event) {
   event.preventDefault();
@@ -21,13 +22,12 @@ function submit(event: Event) {
   const application: JobApplication = {
     user: "guest",
     dateApplied: "",
-    company: "",
-    jobTitle: "",
-    linkToPosting: "",
-    sitePostingCameFrom: "",
-    jobDescription: "",
+    company: company.value,
+    jobTitle: jobTitle.value,
+    linkToPosting: link.value,
+    jobDescription: jobDescription.value,
     tags: [],
-    applied: false,
+    applied: applied.value,
   };
 
   console.log("event called", application);
@@ -43,10 +43,11 @@ function submit(event: Event) {
     <h2>Enter A Job Posting / Application To Record</h2>
 
     <form @submit="submit">
+
+      <b>Job Description</b>
       <textarea
-        v-model="posting"
+        v-model="jobDescription"
         name="posting"
-        placeholder="Job Posting"
         @keyup="
           (event) => {
             //@ts-ignore
@@ -82,16 +83,21 @@ function submit(event: Event) {
         @onUpdated="(e : any) => { company = e.target.value; }"
       />
 
-      <input v-model="company" placeholder="Company" required />
+      <InputField
+        label="Tags"
+        :showHelp="showHelp"
+        :value="tags"
+        helpText="^ Add tags for filtering later. You could enter 'React, Tailwind' if the job involves that. Make sure to use commas
+        and spaces to split them up."
+        @onUpdated="(e : any) => { tags = e.target.value; }"
+        placeholder="Tag1, Tag2"
+      />
 
-      <br />
 
-      <input v-model="tags" placeholder="Tag1, Tag2" />
-      <label class="help" v-if="showHelp"
-        >^ Add tags for filtering later. You could enter
-        <b>React, Tailwind</b> if the job involves that. Make sure to use commas
-        and spaces to split them up.
-      </label>
+
+      <b>Applied</b>
+      <input type="checkbox" v-model="applied" />
+
 
       <input type="submit" />
     </form>

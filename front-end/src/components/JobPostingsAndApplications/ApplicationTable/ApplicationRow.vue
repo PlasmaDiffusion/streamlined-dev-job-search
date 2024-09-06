@@ -21,15 +21,19 @@ function trimDate(date?: string) {
     }
     return date;
   }
-  return "n/a"
+  return "n/a";
 }
 
-function trimJobDescriptionIntoPreview(jobDescription: string) {
-  if (showFullJobDescription.value || jobDescription.length <= 120) {
-    return jobDescription;
+function trimText(text: string, characterLimit: number, remove?: string) {
+  if (remove) {
+    text = text.replace(remove, "");
   }
 
-  return jobDescription.substring(0, 120) + "...";
+  if (showFullJobDescription.value || text.length <= characterLimit) {
+    return text;
+  }
+
+  return text.substring(0, characterLimit) + "...";
 }
 </script>
 
@@ -42,12 +46,18 @@ function trimJobDescriptionIntoPreview(jobDescription: string) {
       }
     "
   >
-    {{ trimJobDescriptionIntoPreview(application.jobDescription) }}
+    {{ trimText(application.jobDescription, 120) }}
   </td>
-  <td>{{ application.linkToPosting }}</td>
+  <td class="small">
+    <a :href="application.linkToPosting">{{
+      trimText(application.linkToPosting, 25, "https://")
+    }}</a>
+  </td>
   <td>{{ application.company }}</td>
-  <td class="small" :title="application.dateApplied">{{ trimDate(application.dateApplied) }}</td>
-  <td>{{ application.jobTitle }}</td>
+  <td class="small" :title="application.dateApplied">
+    {{ trimDate(application.dateApplied) }}
+  </td>
+  <td class="role">{{ application.jobTitle }}</td>
   <td class="tags">{{ application.tags }}</td>
   <td class="small">
     <input type="checkbox" :checked="application.applied" />
