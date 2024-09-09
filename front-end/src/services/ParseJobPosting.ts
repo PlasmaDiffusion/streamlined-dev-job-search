@@ -1,10 +1,12 @@
 export function parseJobPosting(msg: string) {
   const possibleTitle = checkForJobTitle(msg);
   const possibleCompany = checkForCompanyTitle(msg);
+  const possibleTags = checkForTags(msg);
 
   return {
     possibleTitle,
     possibleCompany,
+    possibleTags,
   };
 }
 
@@ -65,8 +67,7 @@ function checkForCompanyTitle(msg: string): string {
 
 //Return whatever array element is found
 function returnNameIfFound(namesToSearchFor: string[], msg: string): string {
-
-  let name = '';
+  let name = "";
 
   namesToSearchFor.forEach((value) => {
     if (msg.includes(value)) {
@@ -75,4 +76,88 @@ function returnNameIfFound(namesToSearchFor: string[], msg: string): string {
   });
 
   return name;
+}
+
+function checkForTags(msg: string) {
+  let tags: string[] = [];
+
+  //Front End / Back End / Full Stack / etc.
+  if (msg.includes("Frontend") || msg.includes("Front End"))
+    tags.push("Front End");
+  if (msg.includes("Backend") || msg.includes("Back End"))
+    tags.push("Back End");
+  if (msg.includes("Fullstack") || msg.includes("Full Stack"))
+    tags.push("Full Stack");
+  if (msg.includes("Mobile") || msg.includes("Android") || msg.includes("iOS"))
+    tags.push("Mobile");
+  if (msg.includes("Embedded")) tags.push("Embedded Systems");
+
+  //Seniority Level
+  if (
+    (msg.includes("Jr") ||
+      msg.includes("Junior") ||
+      msg.includes("Entry Level") ||
+      msg.includes("Entry-Level")) &&
+    !msg.includes("mentor")
+  )
+    tags.push("Junior");
+
+  if (
+    msg.includes("Mid Level") ||
+    msg.includes("Mid-Level") ||
+    msg.includes("Intermediate")
+  )
+    tags.push("Mid Level");
+
+  //Work location
+  if (msg.includes("Remote") && !msg.includes("Hybrid")) tags.push("Remote");
+  else if (msg.includes("Hybrid")) tags.push("Hybrid");
+  else if (
+    msg.includes("On Site") ||
+    !msg.includes("Onsite") ||
+    msg.includes("On-Site")
+  )
+    tags.push("On Site");
+
+  //Frameworks
+  const allTags = tags.concat(
+    checkForSpecificFrameworksOrLanguages(msg, [
+      "React",
+      "NextJS || Next.JS", //The or can be used here to return only one of the two tags
+      "Node.JS || Express",
+      "Bootstrap",
+      "Tailwind",
+      "MongoDB",
+      "Ruby",
+      "Typescript",
+      "Python",
+      "C# || .NET",
+      "Java ", //Try a space to prevent "Javascript" from being detected
+      "Jest",
+      "React Testing Library",
+    ])
+  );
+
+  return allTags.toString();
+}
+
+function checkForSpecificFrameworksOrLanguages(
+  msg: string,
+  frameworks: string[]
+) {
+  let tagsToAdd: string[] = [];
+
+  frameworks.forEach((framework) => {
+    const keywordsToCheck = framework.split(" || ");
+    const keywordToCheck = keywordsToCheck[0];
+    const altKeywordToCheck =
+      keywordsToCheck.length > 1 ? keywordsToCheck[1] : undefined;
+
+    if (keywordToCheck && msg.includes(keywordToCheck))
+      tagsToAdd.push(framework);
+    if (altKeywordToCheck && msg.includes(altKeywordToCheck))
+      tagsToAdd.push(framework);
+  });
+
+  return tagsToAdd;
 }

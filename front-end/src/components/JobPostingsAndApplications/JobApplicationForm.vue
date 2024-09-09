@@ -51,7 +51,11 @@ function submit(event: Event) {
         @keyup="
           (event) => {
             //@ts-ignore
-            console.log(parseJobPosting(event.target.value));
+            const {possibleTitle, possibleCompany, possibleTags} = parseJobPosting(event.target.value);
+            if (jobTitle === '') jobTitle = possibleTitle;
+            if (company === '') company = possibleCompany;
+            if (tags === '') tags = possibleTags.toString();
+
           }
         "
       ></textarea>
@@ -79,7 +83,7 @@ function submit(event: Event) {
       <InputField
         label="Company"
         :showHelp="showHelp"
-        :value="jobTitle"
+        :value="company"
         @onUpdated="(e : any) => { company = e.target.value; }"
       />
 
