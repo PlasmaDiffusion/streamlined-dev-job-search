@@ -40,6 +40,7 @@ function trimText(text: string, characterLimit: number, remove?: string) {
 <template>
   <td
     class="jobDescription"
+    v-bind:class="{ showLineBreaks: showFullJobDescription }"
     :onclick="
       () => {
         showFullJobDescription = !showFullJobDescription;

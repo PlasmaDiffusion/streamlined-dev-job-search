@@ -93,6 +93,8 @@ function checkForTags(msg: string) {
   if (msg.includes("Embedded")) tags.push("Embedded Systems");
 
   //Seniority Level
+  if (msg.includes("Intern") || msg.includes("Internship")) tags.push("Intern");
+
   if (
     (msg.includes("Jr") ||
       msg.includes("Junior") ||
