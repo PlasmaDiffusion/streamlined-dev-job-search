@@ -17,3 +17,13 @@
     margin-bottom: 0;
   }
 }
+
+.absolute {
+  top: 300;
+  position: absolute;
+  background-color: $modalBackground;
+  opacity: 1;
+  width: 50%;
+  white-space: pre;
+
+}

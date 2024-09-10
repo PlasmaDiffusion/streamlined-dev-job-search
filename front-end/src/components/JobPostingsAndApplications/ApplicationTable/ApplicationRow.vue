@@ -4,6 +4,7 @@ import {
   addTh,
   getShortNameOfMonthFromDate,
 } from "../../../services/DateManager";
+import Modal from "../../CommonComponents/Modal.vue";
 import "./ApplicationTable.scss";
 import { ref } from "vue";
 
@@ -44,6 +45,16 @@ function trimText(text: string, characterLimit: number, remove?: string) {
 </script>
 
 <template>
+  <Modal
+    v-if="showFullJobDescription"
+    :message="application.jobDescription"
+    absolute-position
+    @on-click-default-option="
+      () => {
+        showFullJobDescription = false;
+      }
+    "
+  />
   <td
     class="jobDescription"
     v-bind:class="{ showLineBreaks: showFullJobDescription }"

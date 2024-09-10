@@ -1,5 +1,9 @@
 <script setup lang="ts">
-const emit = defineEmits(["onClickLeftOption", "onClickRightOption"]);
+const emit = defineEmits([
+  "onClickLeftOption",
+  "onClickRightOption",
+  "onClickDefaultOption",
+]);
 import "./Modal.scss";
 
 defineProps({
@@ -7,11 +11,13 @@ defineProps({
   message: { type: String, required: true },
   leftOption: { type: String, required: false },
   rightOption: { type: String, required: false },
+  defaultOption: { type: String, required: false },
+  absolutePosition: { type: Boolean, required: false },
 });
 </script>
 
 <template>
-  <section class="modal">
+  <section class="modal" v-bind:class="{ absolute: absolutePosition }">
     <h2>{{ title }}</h2>
     <p>{{ message }}</p>
     <div v-if="!leftOption && !rightOption">
@@ -30,7 +36,11 @@ defineProps({
       <button
         :onclick="
           () => {
-            emit('onClickRightOption');
+            if (!rightOption) {
+              emit('onClickDefaultOption');
+            } else {
+              emit('onClickRightOption');
+            }
           }
         "
       >
