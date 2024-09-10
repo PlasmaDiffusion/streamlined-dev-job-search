@@ -4,6 +4,7 @@ import { JobBoardLink } from "../../Interfaces";
 import LinkForm from "./LinkForm.vue";
 import CustomLink from "./CustomLink.vue";
 import {
+  createOrUpdateLink,
   markLinkAsClicked,
   removeLinkById,
 } from "../../services/API/JobSearchLinksApiCalls";
@@ -32,6 +33,7 @@ function checkIfNewCategory(category: string) {
 
 function linkClicked(link: JobBoardLink) {
   linkRecentlyClicked.value = link;
+  createOrUpdateLink(link, true);
 }
 
 async function deleteClicked(link: JobBoardLink) {

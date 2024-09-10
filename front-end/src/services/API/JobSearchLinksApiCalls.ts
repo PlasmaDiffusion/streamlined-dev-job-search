@@ -37,8 +37,10 @@ export async function fetchLinks() {
 }
 
 //POST /api/JobSearchLinks
-export async function createOrUpdateLink(linkToAddOrEdit: JobBoardLink)
-{
+export async function createOrUpdateLink(
+  linkToAddOrEdit: JobBoardLink,
+  updateLastClickedDate?: boolean
+) {
   let response: AxiosResponse<any, any> | undefined = undefined;
 
   //Add a new link, or edit an old one. -1 will mean it's a new one needing an id.
@@ -52,7 +54,9 @@ export async function createOrUpdateLink(linkToAddOrEdit: JobBoardLink)
     console.log(response);
   } else if (linkToAddOrEdit.id) {
     response = await axios.patch(
-      `${import.meta.env.VITE_API_URL}/JobSearchLinks`,
+      `${import.meta.env.VITE_API_URL}/JobSearchLinks/${
+        updateLastClickedDate && "updateLastClickedDate"
+      }`,
       linkToAddOrEdit
     );
     console.log(response);
@@ -61,8 +65,7 @@ export async function createOrUpdateLink(linkToAddOrEdit: JobBoardLink)
   if (response?.status !== 200) {
     alert("Couldn't add or modify link");
     console.warn(response);
-  }
-  else {
+  } else {
     location.reload();
   }
 }

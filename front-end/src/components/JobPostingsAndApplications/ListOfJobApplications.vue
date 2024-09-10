@@ -53,25 +53,6 @@ async function deleteClicked(application: JobApplication) {
         :key="application.dateApplied"
       >
         <ApplicationRow :application="application" />
-        <!-- <CustomLink
-          v-if="!editing && !addingNewLink"
-          :link="link"
-          @onEditClicked="
-            () => {
-              editing = link;
-            }
-          "
-          @onDeleteClicked="
-            () => {
-              deleteClicked(link);
-            }
-          "
-          @onLinkClicked="
-            () => {
-              linkClicked(link);
-            }
-          "
-        /> -->
       </tr>
     </table>
   </div>

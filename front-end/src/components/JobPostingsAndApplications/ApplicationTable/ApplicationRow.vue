@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { JobApplication } from "../../../Interfaces";
+import {
+  addTh,
+  getShortNameOfMonthFromDate,
+} from "../../../services/DateManager";
 import "./ApplicationTable.scss";
 import { ref } from "vue";
 
@@ -17,7 +21,9 @@ function trimDate(date?: string) {
     date = date.split(" ")[0];
     const dateSplitByDashes = date.split("-");
     if (dateSplitByDashes.length >= 2) {
-      return `${dateSplitByDashes[1]} / ${dateSplitByDashes[2]}`;
+      return `${getShortNameOfMonthFromDate(date)}. ${addTh(
+        parseInt(dateSplitByDashes[2])
+      )}`;
     }
     return date;
   }
