@@ -1,6 +1,6 @@
 export function parseJobPosting(msg: string) {
   const possibleTitle = checkForJobTitle(msg);
-  const possibleCompany = checkForCompanyTitle(msg);
+  const possibleCompany = checkForCompanyTitle(msg, possibleTitle);
   const possibleTags = checkForTags(msg);
 
   return {
@@ -15,12 +15,16 @@ const jobTitleTags = [
   "Software Engineer",
   "Frontend Developer",
   "Front End Developer",
+  "Front-End Developer",
   "Frontend Engineer",
   "Front End Engineer",
+  "Front-End Engineer",
   "Backend Developer",
   "Back End Developer",
+  "Back-End Developer",
   "Backend Engineer",
   "Back End Engineer",
+  "Back-End Engineer",
   "Fullstack Developer",
   "Full Stack Developer",
   "Fullstack Engineer",
@@ -44,25 +48,28 @@ function checkForJobTitle(msg: string): string {
   return returnNameIfFound(jobTitleTags, earlyPartsOfMessage);
 }
 
-function checkForCompanyTitle(msg: string): string {
+function checkForCompanyTitle(msg: string, jobTitleToIgnore: string): string {
   const earlyPartsOfMessage = msg.substring(0, 100);
 
-  const earlyWordsOfMessage = earlyPartsOfMessage.split(" ");
+  const earlyWordsOfMessageMinusTitle =
+    earlyPartsOfMessage.split(jobTitleToIgnore);
 
-  let endIndexOfPossibleCompanyTitle = 0;
+  const potentialCompanyTitle = earlyWordsOfMessageMinusTitle
+    .toString()
+    .replaceAll(",", " ");
 
-  for (let i = 0; i < jobTitleTags.length; i++) {
-    const index = earlyWordsOfMessage.indexOf(jobTitleTags[i]);
-    if (index > -1) {
-      endIndexOfPossibleCompanyTitle = index - 1;
-      break;
-    }
-  }
+  // for (let i = 0; i < jobTitleTags.length; i++) {
+  //   const index = earlyWordsOfMessage.indexOf(jobTitleTags[i]);
+  //   if (index > -1) {
+  //     endIndexOfPossibleCompanyTitle = index - 1;
+  //     break;
+  //   }
+  // }
 
   //Assume the first words before the title is the company name
-  if (earlyPartsOfMessage) {
-    return earlyPartsOfMessage.substring(0, endIndexOfPossibleCompanyTitle);
-  } else return "";
+  if (jobTitleToIgnore && potentialCompanyTitle) {
+    return potentialCompanyTitle;
+  } else return earlyPartsOfMessage;
 }
 
 //Return whatever array element is found
@@ -82,18 +89,33 @@ function checkForTags(msg: string) {
   let tags: string[] = [];
 
   //Front End / Back End / Full Stack / etc.
-  if (msg.includes("Frontend") || msg.includes("Front End"))
+  if (msg.includes("Frontend") || msg.includes("Front End")) {
     tags.push("Front End");
-  if (msg.includes("Backend") || msg.includes("Back End"))
+  }
+  if (msg.includes("Backend") || msg.includes("Back End")) {
     tags.push("Back End");
-  if (msg.includes("Fullstack") || msg.includes("Full Stack"))
+  }
+  if (msg.includes("Fullstack") || msg.includes("Full Stack")) {
     tags.push("Full Stack");
-  if (msg.includes("Mobile") || msg.includes("Android") || msg.includes("iOS"))
+  }
+  if (
+    msg.includes("Mobile") ||
+    msg.includes("Android") ||
+    msg.includes("iOS")
+  ) {
     tags.push("Mobile");
-  if (msg.includes("Embedded")) tags.push("Embedded Systems");
+  }
+  if (msg.includes("Embedded")) {
+    tags.push("Embedded Systems");
+  }
 
   //Seniority Level
-  if (msg.includes("Intern") || msg.includes("Internship")) tags.push("Intern");
+  if (
+    (msg.includes("Intern") || msg.includes("Internship")) &&
+    !msg.includes("Internal")
+  ) {
+    tags.push("Intern");
+  }
 
   if (
     (msg.includes("Jr") ||
@@ -101,25 +123,29 @@ function checkForTags(msg: string) {
       msg.includes("Entry Level") ||
       msg.includes("Entry-Level")) &&
     !msg.includes("mentor")
-  )
+  ) {
     tags.push("Junior");
+  }
 
   if (
     msg.includes("Mid Level") ||
     msg.includes("Mid-Level") ||
     msg.includes("Intermediate")
-  )
+  ) {
     tags.push("Mid Level");
-
+  }
   //Work location
-  if (msg.includes("Remote") && !msg.includes("Hybrid")) tags.push("Remote");
-  else if (msg.includes("Hybrid")) tags.push("Hybrid");
-  else if (
+  if (msg.includes("Remote") && !msg.includes("Hybrid")) {
+    tags.push("Remote");
+  } else if (msg.includes("Hybrid")) {
+    tags.push("Hybrid");
+  } else if (
     msg.includes("On Site") ||
-    !msg.includes("Onsite") ||
+    msg.includes("Onsite") ||
     msg.includes("On-Site")
-  )
+  ) {
     tags.push("On Site");
+  }
 
   //Frameworks
   const allTags = tags.concat(
@@ -156,9 +182,9 @@ function checkForSpecificFrameworksOrLanguages(
       keywordsToCheck.length > 1 ? keywordsToCheck[1] : undefined;
 
     if (keywordToCheck && msg.includes(keywordToCheck))
-      tagsToAdd.push(framework);
-    if (altKeywordToCheck && msg.includes(altKeywordToCheck))
-      tagsToAdd.push(framework);
+      tagsToAdd.push(keywordToCheck);
+    else if (altKeywordToCheck && msg.includes(altKeywordToCheck))
+      tagsToAdd.push(keywordToCheck);
   });
 
   return tagsToAdd;

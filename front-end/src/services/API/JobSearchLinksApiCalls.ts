@@ -65,7 +65,7 @@ export async function createOrUpdateLink(
   if (response?.status !== 200) {
     alert("Couldn't add or modify link");
     console.warn(response);
-  } else {
+  } else if (!updateLastClickedDate) {
     location.reload();
   }
 }
