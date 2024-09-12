@@ -40,21 +40,36 @@ async function deleteClicked(application: JobApplication) {
 </script>
 
 <template>
-  <JobApplicationForm v-if="editing" :showHelp="showHelp" :applicationToEdit="editing" />
+  <JobApplicationForm
+    v-if="editing"
+    :showHelp="showHelp"
+    :applicationToEdit="editing"
+    :previousApplications="fetchedApplications"
+  />
   <section>
     <h2 v-if="props.fetchMethod > 0">
       {{ currentTitle }}
     </h2>
     <div class="applicationTable">
-    <table >
-      <ApplicationHeader/>
-      <tr
-        v-for="application in fetchedApplications"
-        :key="application.dateApplied"
-      >
-        <ApplicationRow :application="application" />
-      </tr>
-    </table>
-  </div>
+      <table>
+        <ApplicationHeader />
+        <tr
+          v-for="application in fetchedApplications"
+          :key="application.dateApplied"
+        >
+          <ApplicationRow
+            :application="application"
+            @onEditClicked="
+              () => {
+                editing = application;
+              }
+            "
+            @onDeleteClicked="()=>{
+              deleteClicked(application);
+            }"
+          />
+        </tr>
+      </table>
+    </div>
   </section>
 </template>

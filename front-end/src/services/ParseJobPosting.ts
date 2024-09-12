@@ -39,6 +39,7 @@ const jobTitleTags = [
   "Vue Engineer",
   "Vue.js Developer",
   "Web Developer",
+  "Javascript Developer"
 ];
 
 function checkForJobTitle(msg: string): string {
@@ -49,7 +50,7 @@ function checkForJobTitle(msg: string): string {
 }
 
 function checkForCompanyTitle(msg: string, jobTitleToIgnore: string): string {
-  const earlyPartsOfMessage = msg.substring(0, 100);
+  const earlyPartsOfMessage = msg.substring(0, 50);
 
   const earlyWordsOfMessageMinusTitle =
     earlyPartsOfMessage.split(jobTitleToIgnore);

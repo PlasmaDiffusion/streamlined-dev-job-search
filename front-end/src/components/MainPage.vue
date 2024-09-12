@@ -70,7 +70,7 @@ async function fetchData() {
 
       <div id="jobApplicationSection">
         <h1>Streamlined Dev Job Searcher</h1>
-        <JobApplicationForm :show-help="helpChecked"/>
+        <JobApplicationForm :previous-applications="fetchedApplications" :show-help="helpChecked"/>
       </div>
 
       <div class="linksSection">

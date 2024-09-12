@@ -2,6 +2,10 @@
 defineProps({
   showHelp: { type: Boolean, required: true },
   applicationToEdit: { type: Object as () => JobApplication, required: false },
+  previousApplications: {
+    type: Object as () => JobApplication[],
+    required: true,
+  },
 });
 import "./JobApplicationForm.scss";
 import { parseJobPosting } from "../../services/ParseJobPosting";
@@ -15,6 +19,7 @@ const jobTitle = ref("");
 const company = ref("");
 const tags = ref("");
 const applied = ref(true);
+const timesAlreadyApplied = ref(0);
 
 function submit(event: Event) {
   event.preventDefault();
@@ -30,11 +35,18 @@ function submit(event: Event) {
     applied: applied.value,
   };
 
-  console.log("event called", application);
-
   application.tags = tags.value.split(", ");
 
   createOrUpdateApplication(application);
+}
+
+function updateTimesPreviouslyAppliedToSameCompany(
+  company: string,
+  previousApplications: JobApplication[]
+) {
+  console.log(previousApplications);
+  timesAlreadyApplied.value =
+    previousApplications?.filter((app) => app.company === company).length || 0;
 }
 </script>
 
@@ -43,19 +55,24 @@ function submit(event: Event) {
     <h2>Enter A Job Posting / Application To Record</h2>
 
     <form @submit="submit">
-
       <b>Job Description</b>
       <textarea
         v-model="jobDescription"
         name="posting"
         @keyup="
           (event) => {
-            //@ts-ignore
-            const {possibleTitle, possibleCompany, possibleTags} = parseJobPosting(event.target.value);
+            const { possibleTitle, possibleCompany, possibleTags } =
+              //@ts-ignore
+              parseJobPosting(event.target.value);
             if (jobTitle === '') jobTitle = possibleTitle;
-            if (company === '') company = possibleCompany;
+            if (company === '') {
+              company = possibleCompany;
+              updateTimesPreviouslyAppliedToSameCompany(
+                company,
+                previousApplications
+              );
+            }
             if (tags === '') tags = possibleTags.toString();
-
           }
         "
       ></textarea>
@@ -84,8 +101,11 @@ function submit(event: Event) {
         label="Company"
         :showHelp="showHelp"
         :value="company"
-        @onUpdated="(e : any) => { company = e.target.value; }"
+        @onUpdated="(e : any) => { company = e.target.value; updateTimesPreviouslyAppliedToSameCompany(e.target.value, previousApplications); }"
       />
+      <p class="warning" v-if="timesAlreadyApplied > 0">
+        (You've applied to this company at least {{ timesAlreadyApplied }} time{{timesAlreadyApplied !== 1 ? "s" : ""}} previously.)
+      </p>
 
       <InputField
         label="Tags"
@@ -97,11 +117,8 @@ function submit(event: Event) {
         placeholder="Tag1, Tag2"
       />
 
-
-
       <b>Applied</b>
       <input type="checkbox" v-model="applied" />
-
 
       <input type="submit" />
     </form>
