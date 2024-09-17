@@ -81,10 +81,10 @@ namespace DynamoDB.Demo.Controllers
             return Ok(request);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{user}/{dateApplied}")]
+        public async Task<IActionResult> Delete(string user, string dateApplied)
         {
-            var jobApplication = await _context.LoadAsync<JobSearchApplication>(id);
+            var jobApplication = await _context.LoadAsync<JobSearchApplication>(user, dateApplied);
             if (jobApplication == null) return NotFound();
             await _context.DeleteAsync(jobApplication);
             return NoContent();

@@ -11,5 +11,6 @@ import "./ApplicationTable.scss";
     <th class="role">Role</th>
     <th class="tags">Tags</th>
     <th class="small">Applied</th>
+    <th class="small"><!--Edit/Delete--></th>
   </tr>
 </template>

@@ -164,6 +164,9 @@ function checkForTags(msg: string) {
       "Java ", //Try a space to prevent "Javascript" from being detected
       "Jest",
       "React Testing Library",
+      "Docker",
+      "Apollo",
+      "GraphQL"
     ])
   );
 

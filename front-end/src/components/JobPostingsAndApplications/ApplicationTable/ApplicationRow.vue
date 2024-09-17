@@ -13,6 +13,7 @@ defineProps({
     required: true,
   },
 });
+const emit = defineEmits(["onEditClicked", "onDeleteClicked"]);
 
 const showFullJobDescription = ref(false);
 
@@ -68,5 +69,27 @@ function trimText(text: string, characterLimit: number, remove?: string) {
   <td class="tags">{{ application.tags }}</td>
   <td class="small">
     <input type="checkbox" :checked="application.applied" />
+  </td>
+  <td class="small">
+    <span
+      class="edit"
+      title="Edit"
+      :onclick="
+        () => {
+          emit('onEditClicked');
+        }
+      "
+      >✎</span
+    >
+    <span
+      class="delete"
+      title="Delete"
+      :onclick="
+        () => {
+          emit('onDeleteClicked');
+        }
+      "
+      >🗑</span
+    >
   </td>
 </template>

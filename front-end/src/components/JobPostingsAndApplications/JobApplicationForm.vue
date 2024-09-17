@@ -44,7 +44,7 @@ function updateTimesPreviouslyAppliedToSameCompany(
   company: string,
   previousApplications: JobApplication[]
 ) {
-  console.log(previousApplications);
+  if (company === "") return;
   timesAlreadyApplied.value =
     previousApplications?.filter((app) => app.company === company).length || 0;
 }

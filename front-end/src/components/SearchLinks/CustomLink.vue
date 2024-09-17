@@ -44,6 +44,7 @@ const emit = defineEmits(["onLinkClicked", "onEditClicked", "onDeleteClicked"]);
       </span>
       <span
         class="edit"
+        title="Edit"
         :onclick="
           () => {
             emit('onEditClicked');
@@ -53,6 +54,7 @@ const emit = defineEmits(["onLinkClicked", "onEditClicked", "onDeleteClicked"]);
       >
       <span
         class="delete"
+        title="Delete"
         :onclick="
           () => {
             emit('onDeleteClicked');
