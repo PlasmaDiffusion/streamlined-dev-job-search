@@ -1,26 +1,60 @@
 <script lang="ts">
 import * as d3 from "d3";
+import { JobApplication } from "../../Interfaces";
+import { getShortNameOfMonthFromNumber } from "../../services/DateManager";
 export default {
   data() {
     return {};
   },
+  props: {
+    applications: {
+      type: Object as () => JobApplication[],
+      required: true,
+    },
+  },
   mounted() {
     const width = 800;
     const height = 800;
-    const data = [
-      { date: "26-Apr-07", amount: 3 },
-      { date: "27-Apr-07", amount: 5 },
-      { date: "28-Apr-07", amount: 2 },
-      { date: "29-Apr-07", amount: 4 },
-      { date: "30-Apr-07", amount: 3 },
-      { date: "6-May-07", amount: 1 },
-      { date: "7-May-07", amount: 5 },
-      { date: "8-May-07", amount: 7 },
-      { date: "9-May-07", amount: 6 },
-      { date: "10-May-07", amount: 4 },
-      { date: "11-May-07", amount: 3 },
-      { date: "12-May-07", amount: 2 },
+    let data = [
+      { date: "26-Apr-07", amount: 3, actualDatabaseDate: "" },
     ];
+
+    data = [];
+
+    //Todo: Use a Set to add onto days with multiple applications
+
+    this.applications.forEach((application) => {
+      //Check if date already has been entered here
+      const existingIndex = data.findIndex(
+        (e) => e.actualDatabaseDate === application.dateApplied?.split(" ")[0]
+      );
+
+      console.log(application.dateApplied?.split(" ")[0], existingIndex);
+      if (existingIndex > -1) {
+        data[existingIndex] = {
+          date: data[existingIndex].date,
+          amount: data[existingIndex].amount + 1,
+          actualDatabaseDate: data[existingIndex].actualDatabaseDate,
+        };
+      } else {
+        //Convert date to a date string that will work in d3.js
+        const dateAndYear = application.dateApplied?.split(" ");
+        const date = dateAndYear ? dateAndYear[0] : "";
+
+        const day = date.split("-")[2];
+        let month = date.split("-")[1];
+        const year = date.split("-")[0];
+
+        month = getShortNameOfMonthFromNumber(parseInt(month));
+
+        console.log(date);
+        data.push({
+          date: `${day}-${month}-${year.substring(2)}`,
+          amount: 1,
+          actualDatabaseDate: application.dateApplied?.split(" ")[0] || "",
+        });
+      }
+    });
 
     const svg = d3.select("svg").attr("width", width).attr("height", height);
     const g = svg.append("g").attr("transform", `translate(20,0)`);
@@ -36,7 +70,7 @@ export default {
           return parseTime(d.date);
         })
       )
-      .rangeRound([0, width-25]);
+      .rangeRound([0, width - 25]);
 
     const y = d3
       .scaleLinear()

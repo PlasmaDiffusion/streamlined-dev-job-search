@@ -9,7 +9,7 @@ defineProps({
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ListOfLinks from "./SearchLinks/ListOfLinks.vue";
-import TestGraph from "./Analytics/TestGraph.vue";
+import ApplicationsSentGraph from "./Analytics/ApplicationsSentGraph.vue";
 import {
   FetchedLinksResponse,
   fetchLinks,
@@ -98,7 +98,7 @@ async function fetchData() {
         :value="helpChecked"
       />
     </div>
-    <TestGraph />
+    <ApplicationsSentGraph v-if="fetchedApplications.length > 0" :applications="fetchedApplications"/>
     <a href="https://www.hnhiringtrends.com/">Hacker News Hiring Trends</a>
     <a href="https://layoffs.fyi/">Layoff Graph</a>
   </div>
