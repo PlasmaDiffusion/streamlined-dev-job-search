@@ -27,10 +27,13 @@ const editing = ref<JobApplication>();
 const currentTitle = titles[props.fetchMethod];
 
 async function deleteClicked(application: JobApplication) {
-  if (window.confirm(`Delete application to ${application.company}?`)) {
+  if (
+    application.dateApplied &&
+    window.confirm(`Delete application to ${application.company}?`)
+  ) {
     const updatedLinkArray = await removeApplicationById(
       applications.value,
-      application.dateApplied || ""
+      application.dateApplied
     );
     if (updatedLinkArray) {
       applications.value = [...updatedLinkArray];
@@ -64,9 +67,11 @@ async function deleteClicked(application: JobApplication) {
                 editing = application;
               }
             "
-            @onDeleteClicked="()=>{
-              deleteClicked(application);
-            }"
+            @onDeleteClicked="
+              () => {
+                deleteClicked(application);
+              }
+            "
           />
         </tr>
       </table>
