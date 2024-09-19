@@ -9,10 +9,13 @@ import {
   removeLinkById,
 } from "../../services/API/JobSearchLinksApiCalls";
 import Modal from "../CommonComponents/Modal.vue";
+import ProgressBar from "../CommonComponents/ProgressBar.vue";
+import { checkIfDateIsTodaysDate } from "../../services/DateManager";
 
 const props = defineProps({
   fetchedLinks: { type: Object as () => JobBoardLink[], required: true },
   showHelp: { type: Boolean, required: true },
+  showProgressBar: { type: Boolean, required: false },
   listIsForCompanySiteLinks: { type: Boolean },
 });
 
@@ -43,6 +46,14 @@ async function deleteClicked(link: JobBoardLink) {
       links.value = [...updatedLinkArray];
     }
   }
+}
+
+function getNumberOfLinksClicked() {
+  let totalClicks = 0;
+  links.value.forEach((link) => {
+    totalClicks += checkIfDateIsTodaysDate(link.lastClicked) ? 1 : 0;
+  });
+  return totalClicks;
 }
 </script>
 
@@ -115,6 +126,13 @@ async function deleteClicked(link: JobBoardLink) {
     >
       + New Link
     </button>
+    <ProgressBar
+      title="Clicks"
+      :amount="getNumberOfLinksClicked()"
+      :maxAmount="4"
+      :minPercentage="0.3"
+      v-if="showProgressBar"
+    />
     <LinkForm
       v-if="editing || addingNewLink"
       :showHelp="showHelp"

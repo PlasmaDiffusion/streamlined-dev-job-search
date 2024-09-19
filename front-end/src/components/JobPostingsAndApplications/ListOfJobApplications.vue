@@ -57,7 +57,7 @@ async function deleteClicked(application: JobApplication) {
     <ProgressBar
       :v-if="fetchedApplications.length > 0"
       title="Target Goal"
-      :amount="51"
+      :amount="fetchedApplications.length"
       :maxAmount="70"
     />
     <div class="applicationTable">

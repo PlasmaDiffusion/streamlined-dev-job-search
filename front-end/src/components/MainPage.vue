@@ -80,6 +80,7 @@ async function fetchData() {
           v-if="!loading"
           :showHelp="helpChecked"
           :fetched-links="fetchedLinks.jobBoardLinks"
+          showProgressBar
         />
         <Loading :loading="loading" :error="linkError" error-message="" />
       </div>

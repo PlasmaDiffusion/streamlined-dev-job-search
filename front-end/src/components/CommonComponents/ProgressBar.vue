@@ -3,6 +3,7 @@ const props = defineProps<{
   title?: string;
   amount: number;
   maxAmount: number;
+  minPercentage?: number;
   fillColours?: string[];
   backgroundColour?: string;
 }>();
@@ -14,7 +15,8 @@ function getPercentageFilled() {
   return props.amount / props.maxAmount;
 }
 function getWidthFilled() {
-  let percentage = Math.max(0.2, getPercentageFilled()) * 100;
+  let percentage =
+    Math.max(props.minPercentage || 0.2, getPercentageFilled()) * 100;
   percentage = Math.min(percentage, 100);
   return percentage.toString() + "%";
 }
@@ -53,7 +55,8 @@ function getFillColourFromPercentageFilled() {
         backgroundColor: getFillColourFromPercentageFilled(),
       }"
     >
-      {{ title }} : {{ amount }} / {{ maxAmount }}
+      {{ title }}: {{ amount }} / {{ maxAmount }}
+      {{ amount > maxAmount ? "★" : "" }}
     </div>
   </div>
 </template>
