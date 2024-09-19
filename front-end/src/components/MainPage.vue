@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 //Handles fetching of links and applications, as well as settings like help
 
@@ -70,7 +69,10 @@ async function fetchData() {
 
       <div id="jobApplicationSection">
         <h1>Streamlined Dev Job Searcher</h1>
-        <JobApplicationForm :previous-applications="fetchedApplications" :show-help="helpChecked"/>
+        <JobApplicationForm
+          :previous-applications="fetchedApplications"
+          :show-help="helpChecked"
+        />
       </div>
 
       <div class="linksSection">
@@ -83,8 +85,11 @@ async function fetchData() {
       </div>
     </div>
 
-    <ListOfJobApplications :showHelp="helpChecked" :fetchedApplications="fetchedApplications" :fetchMethod="ApplicationFetchMethod.THIS_MONTH" />
-
+    <ListOfJobApplications
+      :showHelp="helpChecked"
+      :fetchedApplications="fetchedApplications"
+      :fetchMethod="ApplicationFetchMethod.THIS_MONTH"
+    />
 
     <div class="settings">
       <p>Show Help</p>
@@ -98,7 +103,10 @@ async function fetchData() {
         :value="helpChecked"
       />
     </div>
-    <ApplicationsSentGraph v-if="fetchedApplications.length > 0" :applications="fetchedApplications"/>
+    <ApplicationsSentGraph
+      v-if="fetchedApplications.length > 0"
+      :applications="fetchedApplications"
+    />
     <a href="https://www.hnhiringtrends.com/">Hacker News Hiring Trends</a>
     <a href="https://layoffs.fyi/">Layoff Graph</a>
   </div>

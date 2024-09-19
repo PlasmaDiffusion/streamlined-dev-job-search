@@ -29,7 +29,6 @@ export default {
         (e) => e.actualDatabaseDate === application.dateApplied?.split(" ")[0]
       );
 
-      console.log(application.dateApplied?.split(" ")[0], existingIndex);
       if (existingIndex > -1) {
         data[existingIndex] = {
           date: data[existingIndex].date,
@@ -47,7 +46,6 @@ export default {
 
         month = getShortNameOfMonthFromNumber(parseInt(month));
 
-        console.log(date);
         data.push({
           date: `${day}-${month}-${year.substring(2)}`,
           amount: 1,
@@ -143,7 +141,7 @@ export default {
 
 <template>
   <div>
-    <h2>Applications Made</h2>
+    <h2>Applications Per Day</h2>
     <svg></svg>
   </div>
 </template>

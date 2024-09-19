@@ -5,6 +5,7 @@ import JobApplicationForm from "./JobApplicationForm.vue";
 import { removeApplicationById } from "../../services/API/JobSearchApplicationsApiCalls";
 import ApplicationRow from "./ApplicationTable/ApplicationRow.vue";
 import ApplicationHeader from "./ApplicationTable/ApplicationHeader.vue";
+import ProgressBar from "../CommonComponents/ProgressBar.vue";
 
 const props = defineProps({
   fetchedApplications: {
@@ -53,6 +54,12 @@ async function deleteClicked(application: JobApplication) {
     <h2 v-if="props.fetchMethod > 0">
       {{ currentTitle }}
     </h2>
+    <ProgressBar
+      :v-if="fetchedApplications.length > 0"
+      title="Target Goal"
+      :amount="51"
+      :maxAmount="70"
+    />
     <div class="applicationTable">
       <table>
         <ApplicationHeader />

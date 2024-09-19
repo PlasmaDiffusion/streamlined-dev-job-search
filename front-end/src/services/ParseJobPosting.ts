@@ -166,7 +166,8 @@ function checkForTags(msg: string) {
       "React Testing Library",
       "Docker",
       "Apollo",
-      "GraphQL"
+      "GraphQL",
+      "WordPress"
     ])
   );
 
