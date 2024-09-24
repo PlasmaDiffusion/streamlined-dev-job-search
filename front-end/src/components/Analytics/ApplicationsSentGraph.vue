@@ -15,9 +15,7 @@ export default {
   mounted() {
     const width = 800;
     const height = 800;
-    let data = [
-      { date: "26-Apr-07", amount: 3, actualDatabaseDate: "" },
-    ];
+    let data = [{ date: "26-Apr-07", amount: 3, actualDatabaseDate: "" }];
 
     data = [];
 
@@ -64,6 +62,7 @@ export default {
     const x = d3
       .scaleTime()
       .domain(
+        //@ts-expect-error
         d3.extent(data, function (d) {
           return parseTime(d.date);
         })
@@ -85,9 +84,11 @@ export default {
     const line = d3
       .line()
       .x(function (d) {
+        //@ts-expect-error
         return x(parseTime(d.date));
       })
-      .y(function (d) {
+      //@ts-expect-error
+      .y(function (d: { amount: any }) {
         return y(d.amount);
       });
 
@@ -121,6 +122,7 @@ export default {
       .attr("fill", "none")
       .attr("stroke", "steelblue")
       .attr("stroke-width", 1.5)
+      //@ts-expect-error
       .attr("d", line);
 
     g.selectAll(".dot")
@@ -132,7 +134,9 @@ export default {
       .enter()
       .append("circle")
       .attr("class", "dot")
+      //@ts-expect-error
       .attr("cx", line.x())
+      //@ts-expect-error
       .attr("cy", line.y())
       .attr("r", 3.5);
   },

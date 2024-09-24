@@ -97,7 +97,7 @@ async function fetchData() {
       <input
         type="checkbox"
         @change="
-          (event) => {
+          () => {
             helpChecked = !helpChecked;
           }
         "
