@@ -153,6 +153,8 @@ function checkForTags(msg: string) {
     checkForSpecificFrameworksOrLanguages(msg, [
       "React",
       "NextJS || Next.JS", //The or can be used here to return only one of the two tags
+      "Angular",
+      "Vue",
       "Node.JS || Express",
       "Bootstrap",
       "Tailwind",
