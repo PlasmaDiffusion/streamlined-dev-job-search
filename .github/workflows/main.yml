@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  PROJECT_LOCATION: dotnet-mvc/dotnet-mvc.csproj
+  PROJECT_LOCATION: back-end/Streamlined-Dev-Job-Searcher-API/Streamlined-Dev-Job-Searcher-API.csproj
   ELASTIC_BEANSTALK_NAME: dotnet-linux
   ELASTIC_BEANSTALK_ENV_NAME: Dotnet-linux-env
 
@@ -23,12 +23,12 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore back-end
+      run: dotnet restore $PROJECT_LOCATION
     - name: Build
       run: dotnet build --no-restore $PROJECT_LOCATION
     - name: Pack
       run: |
-        dotnet publish back-end -c Release --output "${{ github.workspace }}/${{github.run_id}}"
+        dotnet publish $PROJECT_LOCATION -c Release --output "${{ github.workspace }}/${{github.run_id}}"
         cd ${{github.run_id}}
         zip -r ../${{github.run_id}}.zip .
     - name: Upload Artifacts
@@ -49,3 +49,9 @@ jobs:
         aws-region: us-east-1
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Deploy
+      run: |
+        aws s3 cp "deploy-files/${{github.run_id}}.zip" s3://elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}/artifact/dotnet-mvc-app/
+        aws elasticbeanstalk create-application-version --application-name $ELASTIC_BEANSTALK_NAME --version-label ${{github.run_id}} --description ${{github.run_id}} --source-bundle S3Bucket="elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="artifact/dotnet-mvc-app/${{github.run_id}}.zip"
+        aws elasticbeanstalk update-environment --application-name $ELASTIC_BEANSTALK_NAME --environment-name $ELASTIC_BEANSTALK_ENV_NAME --version-label ${{github.run_id}}
+        aws elasticbeanstalk wait environment-updated --application-name $ELASTIC_BEANSTALK_NAME --environment-name $ELASTIC_BEANSTALK_ENV_NAME
