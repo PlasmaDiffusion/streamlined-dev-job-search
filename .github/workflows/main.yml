@@ -8,8 +8,8 @@ on:
 
 env:
   PROJECT_LOCATION: back-end/Streamlined-Dev-Job-Searcher-API/Streamlined-Dev-Job-Searcher-API.csproj
-  ELASTIC_BEANSTALK_NAME: dotnet-linux
-  ELASTIC_BEANSTALK_ENV_NAME: Dotnet-linux-env
+  ELASTIC_BEANSTALK_NAME: Streamlined-Job-Search-Api
+  ELASTIC_BEANSTALK_ENV_NAME: Streamlined-Job-Search-Api-env
 
 jobs:
   build:
