@@ -18,7 +18,7 @@ namespace DynamoDB.Demo.Controllers
         public JobSearchLinksController()
         {
             var config = new DynamoDBContextConfig { Conversion = DynamoDBEntryConversion.V2 };
-            _context = new DynamoDBContext(new AmazonDynamoDBClient(Environment.GetEnvironmentVariable("AWS_AccessKey", EnvironmentVariableTarget.User), Environment.GetEnvironmentVariable("AWS_SecretKey", EnvironmentVariableTarget.User), Amazon.RegionEndpoint.USEast2), config);
+            _context = new DynamoDBContext(new AmazonDynamoDBClient(Environment.GetEnvironmentVariable("AWS_AccessKey"), Environment.GetEnvironmentVariable("AWS_SecretKey"), Amazon.RegionEndpoint.USEast2), config);
         }
 
         [HttpGet("{id}")]
