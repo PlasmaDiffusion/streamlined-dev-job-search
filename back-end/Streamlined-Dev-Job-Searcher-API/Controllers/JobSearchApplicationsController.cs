@@ -35,11 +35,24 @@ namespace DynamoDB.Demo.Controllers
             DateTime today = DateTime.Now;
 
 
-            ScanCondition isMonthCondition = new ScanCondition("DateApplied", ScanOperator.Contains, today.Month.ToString());
+            ScanCondition isCurrentMonthAndYearCondition = new ScanCondition("DateApplied", ScanOperator.Contains, today.Year.ToString() + '-' + today.Month.ToString());
+
+
+            var jobApplications = await _context.ScanAsync<JobSearchApplication>([isCurrentMonthAndYearCondition]).GetRemainingAsync();
+
+            return Ok(jobApplications);
+        }
+
+        [HttpGet("currentYear")]
+        public async Task<IActionResult> GetAllApplicationsThisYear()
+        {
+            DateTime today = DateTime.Now;
+
+
             ScanCondition isYearCondition = new ScanCondition("DateApplied", ScanOperator.Contains, today.Year.ToString());
 
 
-            var jobApplications = await _context.ScanAsync<JobSearchApplication>([isMonthCondition, isYearCondition]).GetRemainingAsync();
+            var jobApplications = await _context.ScanAsync<JobSearchApplication>([isYearCondition]).GetRemainingAsync();
 
             return Ok(jobApplications);
         }
@@ -72,8 +85,10 @@ namespace DynamoDB.Demo.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(JobSearchApplication request)
         {
-            //Automatically set the date before posting (it's the sort key)
-            request.DateApplied = DateTime.Now.ToString();
+            DateTime currentDateTime = DateTime.Now;
+            // A date sort key needs to be a string. Make sure we have a YYYY-MM-DD T format regardless of the hosting server.
+            request.DateApplied = currentDateTime.Year.ToString() + '-' + currentDateTime.Month.ToString() + '-'
+            + currentDateTime.Day.ToString() + " " + currentDateTime.TimeOfDay.ToString();
 
             var jobApplication = await _context.LoadAsync<JobSearchApplication>(request.User, request.DateApplied);
             if (jobApplication != null) return BadRequest($"JobApplication with Id {request.User}, {request.DateApplied} Already Exists");
