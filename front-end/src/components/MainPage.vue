@@ -86,12 +86,7 @@ async function fetchData() {
       </div>
     </div>
 
-    <ListOfJobApplications
-      :showHelp="helpChecked"
-      :fetchedApplications="fetchedApplications"
-      :fetchMethod="ApplicationFetchMethod.THIS_MONTH"
-    />
-
+    
     <div class="settings">
       <p>Show Help</p>
       <input
@@ -104,6 +99,12 @@ async function fetchData() {
         :value="helpChecked"
       />
     </div>
+
+    <ListOfJobApplications
+      :showHelp="helpChecked"
+      :fetchedApplications="fetchedApplications"
+      :fetchMethod="ApplicationFetchMethod.THIS_MONTH"
+    />
     <ApplicationsSentGraph
       v-if="fetchedApplications.length > 0"
       :applications="fetchedApplications"
