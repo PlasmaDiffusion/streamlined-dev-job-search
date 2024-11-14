@@ -169,7 +169,8 @@ function checkForTags(msg: string) {
       "Docker",
       "Apollo",
       "GraphQL",
-      "WordPress"
+      "WordPress",
+      "D3.js"
     ])
   );
 

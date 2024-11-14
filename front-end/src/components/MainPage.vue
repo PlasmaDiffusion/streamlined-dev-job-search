@@ -1,12 +1,6 @@
 <script setup lang="ts">
 //Handles fetching of links and applications, as well as settings like help
-
-defineProps({
-  msg: String,
-});
-
 import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
 import ListOfLinks from "./SearchLinks/ListOfLinks.vue";
 import ApplicationsSentGraph from "./Analytics/ApplicationsSentGraph.vue";
 import {
@@ -16,15 +10,15 @@ import {
 import "./MainPage.scss";
 import Loading from "./CommonComponents/Loading.vue";
 import { ApplicationFetchMethod, JobApplication } from "../Interfaces.ts";
-import { fetchCurrentMonthApplications } from "../services/API/JobSearchApplicationsApiCalls.ts";
+import { fetchApplications } from "../services/API/JobSearchApplicationsApiCalls.ts";
 import ListOfJobApplications from "./JobPostingsAndApplications/ListOfJobApplications.vue";
 import JobApplicationForm from "./JobPostingsAndApplications/JobApplicationForm.vue";
 
-const route = useRoute();
 const helpChecked = ref(false);
 const loading = ref(true);
 const linkError = ref(false);
 const applicationError = ref(false);
+const applicationFetchMethod = ref(ApplicationFetchMethod.THIS_MONTH);
 
 const fetchedLinks = ref<FetchedLinksResponse>({
   companySiteLinks: [],
@@ -32,16 +26,21 @@ const fetchedLinks = ref<FetchedLinksResponse>({
 });
 const fetchedApplications = ref<JobApplication[]>([]);
 
-// watch the params of the route to fetch the data again
-watch(() => route, fetchData, { immediate: true });
+// Watch fetch settings to fetch with different parameters if needed
+watch(() => applicationFetchMethod, fetchData, { immediate: true, deep: true });
 
 async function fetchData() {
+  //Fetch links to click on the sidebars
   const responseForLinks = await fetchLinks();
   if (!responseForLinks) {
     linkError.value = true;
   }
   fetchedLinks.value = responseForLinks?.data || {};
-  const responseForApplications = await fetchCurrentMonthApplications();
+
+  //Fetch table of job applications
+  const responseForApplications = await fetchApplications(
+    applicationFetchMethod.value
+  );
   if (!responseForApplications) {
     applicationError.value = true;
   }
@@ -86,7 +85,6 @@ async function fetchData() {
       </div>
     </div>
 
-    
     <div class="settings">
       <p>Show Help</p>
       <input
@@ -100,16 +98,44 @@ async function fetchData() {
       />
     </div>
 
+    <div class="settings">
+      <p class="smallText">Show Applications From</p>
+      <button
+        :onclick="
+          () => (applicationFetchMethod = ApplicationFetchMethod.THIS_MONTH)
+        "
+      >
+        This Month
+      </button>
+      <button
+        :onclick="
+          () => (applicationFetchMethod = ApplicationFetchMethod.THIS_YEAR)
+        "
+      >
+        This Year
+      </button>
+      <button
+        :onclick="
+          () => (applicationFetchMethod = ApplicationFetchMethod.ALL_TIME)
+        "
+      >
+        All Time
+      </button>
+    </div>
+
     <ListOfJobApplications
       :showHelp="helpChecked"
       :fetchedApplications="fetchedApplications"
-      :fetchMethod="ApplicationFetchMethod.THIS_MONTH"
+      :fetchMethod="applicationFetchMethod"
     />
     <ApplicationsSentGraph
       v-if="fetchedApplications.length > 0"
       :applications="fetchedApplications"
     />
-    <a href="https://www.hnhiringtrends.com/">Hacker News Hiring Trends</a>
-    <a href="https://layoffs.fyi/">Layoff Graph</a>
+
+    <div class="settings">
+      <a href="https://www.hnhiringtrends.com/">Hacker News Hiring Trends</a>
+      <a href="https://layoffs.fyi/">Layoff Graph</a>
+    </div>
   </div>
 </template>

@@ -1,24 +1,20 @@
 import axios, { AxiosResponse } from "axios";
-import { JobApplication } from "../../Interfaces";
+import { ApplicationFetchMethod, JobApplication } from "../../Interfaces";
 
 //GET /api/JobApplications/{id}
 
 //GET /api/JobApplications
-export async function fetchAllApplications() {
-  const response = await axios
-    .get(`${import.meta.env.VITE_API_URL}/JobSearchApplications`)
-    .catch((e) => console.log(e));
-  console.log(response);
+export async function fetchApplications(fetchBy: ApplicationFetchMethod) {
+  let param = "";
 
-  return response;
-}
+  console.log("fetching by",  fetchBy as ApplicationFetchMethod);
 
-//GET /api/JobApplications/CurrentMonth
-export async function fetchCurrentMonthApplications() {
+  if (fetchBy === ApplicationFetchMethod.THIS_MONTH) param += "/currentMonth";
+  else if (fetchBy === ApplicationFetchMethod.THIS_YEAR) param += "/currentYear";
+
   const response = await axios
-    .get(`${import.meta.env.VITE_API_URL}/JobSearchApplications/currentMonth`)
+    .get(`${import.meta.env.VITE_API_URL}/JobSearchApplications${param}`)
     .catch((e) => console.log(e));
-  console.log(response);
 
   return response;
 }
