@@ -7,6 +7,7 @@ import ApplicationRow from "./ApplicationTable/ApplicationRow.vue";
 import ApplicationHeader from "./ApplicationTable/ApplicationHeader.vue";
 import ProgressBar from "../CommonComponents/ProgressBar.vue";
 
+//A large table of job applications fetched from MainPage. Renders components for each table row.
 const props = defineProps({
   fetchedApplications: {
     type: Object as () => JobApplication[],

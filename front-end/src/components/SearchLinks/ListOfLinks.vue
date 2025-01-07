@@ -12,6 +12,7 @@ import Modal from "../CommonComponents/Modal.vue";
 import ProgressBar from "../CommonComponents/ProgressBar.vue";
 import { checkIfDateIsTodaysDate } from "../../services/DateManager";
 
+//Contains a scrollable list of links and a form at the bottom to add more links / edit them.
 const props = defineProps({
   fetchedLinks: { type: Object as () => JobBoardLink[], required: true },
   showHelp: { type: Boolean, required: true },
@@ -60,7 +61,7 @@ function getNumberOfLinksClicked() {
 <template>
   <section>
     <h2 v-if="!editing && !addingNewLink" class="linkHeading">
-      {{ `${listIsForCompanySiteLinks ? "Company Site" : "Job Board"} Links` }}
+      {{ `${listIsForCompanySiteLinks ? "Alternate" : "Job Board"} Links` }}
     </h2>
     <Modal
       v-if="linkRecentlyClicked"

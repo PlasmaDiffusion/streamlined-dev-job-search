@@ -5,6 +5,7 @@ import {
   getLastClickedText,
 } from "../../services/DateManager";
 
+//A custom link to be in a list. Contains buttons for events that the ListOfLinks will handle.
 defineProps({
   link: { type: Object as () => JobBoardLink, required: true },
   editing: Boolean,
