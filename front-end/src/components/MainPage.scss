@@ -17,3 +17,28 @@
     width: 20rem;
     margin: 2rem;
 }
+
+@media screen and (max-width: 768px)
+{
+    .mainContainer
+    {
+        flex-direction: column;
+    }
+
+    #jobApplicationSection
+    {
+        width: 100%;
+    }
+
+    .linksSection
+    {
+        width: 100%;
+        margin: 0.1rem;
+    }
+
+    .settings
+    {
+        width: 100%;
+    }
+    
+}
