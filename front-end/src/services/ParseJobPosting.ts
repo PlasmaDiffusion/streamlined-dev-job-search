@@ -52,8 +52,6 @@ function checkForJobTitle(msg: string): string {
 function checkForCompanyTitle(msg: string, jobTitleToIgnore: string): string {
 
   //Linked in copy paste usually includes share. Ignore stuff after that.
-  console.log(msg);
-  console.log(msg.includes("Share\nShow more options"));
   if (msg.includes("Share\nShow more options"))
     {
       msg = msg.split("Share\nShow more options")[0];
