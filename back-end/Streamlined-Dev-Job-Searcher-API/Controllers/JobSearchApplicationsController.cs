@@ -25,6 +25,8 @@ namespace DynamoDB.Demo.Controllers
         public async Task<IActionResult> GetAll()
         {
             var jobApplications = await _context.ScanAsync<JobSearchApplication>(default).GetRemainingAsync();
+            jobApplications= JobSearchApplication.SortApplicationsByDate(jobApplications);
+            
             return Ok(jobApplications);
         }
 
@@ -39,6 +41,7 @@ namespace DynamoDB.Demo.Controllers
 
 
             var jobApplications = await _context.ScanAsync<JobSearchApplication>([isCurrentMonthAndYearCondition]).GetRemainingAsync();
+            jobApplications= JobSearchApplication.SortApplicationsByDate(jobApplications);
 
             return Ok(jobApplications);
         }
@@ -53,6 +56,7 @@ namespace DynamoDB.Demo.Controllers
 
 
             var jobApplications = await _context.ScanAsync<JobSearchApplication>([isYearCondition]).GetRemainingAsync();
+            jobApplications= JobSearchApplication.SortApplicationsByDate(jobApplications);
 
             return Ok(jobApplications);
         }

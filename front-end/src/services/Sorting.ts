@@ -1,5 +1,6 @@
 import { JobBoardLink } from "../Interfaces";
 
+//The back end usually handles sorting but these unused functions are here if needed
 export function sortLinksByCategory(links: JobBoardLink[]) {
   links.sort(function (a, b) {
     var textA = a.category.toUpperCase();
