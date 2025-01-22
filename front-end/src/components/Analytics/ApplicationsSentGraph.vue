@@ -14,8 +14,8 @@ export default {
     },
   },
   mounted() {
-    const width = 1920 ;
-    const height = 1080;
+    const width = 1140; //1920 * 0.75
+    const height = 810; //1080 * 0.75
     let data = [{ date: "26-Apr-07", amount: 3, actualDatabaseDate: "" }];
 
     data = [];
