@@ -61,11 +61,11 @@ function trimText(text: string, characterLimit: number, remove?: string) {
       trimText(application.linkToPosting, 25, "https://")
     }}</a>
   </td>
-  <td>{{ application.company }}</td>
+  <td class="shadow">{{ application.company }}</td>
+  <td class="medium shadow">{{ application.jobTitle }}</td>
   <td class="small" :title="application.dateApplied">
     {{ trimDate(application.dateApplied) }}
   </td>
-  <td class="role">{{ application.jobTitle }}</td>
   <td class="tags">{{ application.tags }}</td>
   <td class="small">
     <input type="checkbox" :checked="application.applied" />

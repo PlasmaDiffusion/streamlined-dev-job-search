@@ -2,7 +2,7 @@
 
 td,
 th {
-  border: 1px solid #dddddd;
+  border: 1px solid $outline;
   text-align: left;
   padding: 8px;
   overflow: hidden;
@@ -18,14 +18,27 @@ td.showLineBreaks {
 }
 
 td.tags {
+  font-size: 0.75rem;
+  max-width: 10rem;
 }
 
-td.role {
+
+td.medium {
+  max-width: 10rem;
 }
 
 td.small {
-  width: 10%;
+  width: 5rem;
 }
+
+td.italics {
+  font-style: italic;
+}
+
+td.shadow {
+  text-shadow: grey 1px 0 10px;
+}
+
 
 tr:nth-child(even) {
   background-color: $modalBackground;
