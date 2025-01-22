@@ -6,6 +6,7 @@ import {
 } from "../../../services/DateManager";
 import "./ApplicationTable.scss";
 import { ref } from "vue";
+import ApplicationTags from "./ApplicationTags.vue";
 
 defineProps({
   application: {
@@ -66,7 +67,7 @@ function trimText(text: string, characterLimit: number, remove?: string) {
   <td class="small" :title="application.dateApplied">
     {{ trimDate(application.dateApplied) }}
   </td>
-  <td class="tags">{{ application.tags }}</td>
+  <ApplicationTags :tags="application.tags ?? []" />
   <td class="small">
     <input type="checkbox" :checked="application.applied" />
   </td>
