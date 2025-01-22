@@ -1,4 +1,5 @@
 <script lang="ts">
+import "./Analytics.scss";
 import * as d3 from "d3";
 import { JobApplication } from "../../Interfaces";
 import { getShortNameOfMonthFromNumber } from "../../services/DateManager";
@@ -13,8 +14,8 @@ export default {
     },
   },
   mounted() {
-    const width = 800;
-    const height = 800;
+    const width = 1920 ;
+    const height = 1080;
     let data = [{ date: "26-Apr-07", amount: 3, actualDatabaseDate: "" }];
 
     data = [];
@@ -53,7 +54,7 @@ export default {
     });
 
     const svg = d3.select("svg").attr("width", width).attr("height", height);
-    const g = svg.append("g").attr("transform", `translate(20,0)`);
+    const g = svg.append("g").attr("transform", `translate(20,-5)`);
 
     //2. Parse the dates
     const parseTime = d3.timeParse("%d-%b-%y");
@@ -97,7 +98,7 @@ export default {
     //x axis label
     g.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(x).ticks(d3.timeDay.every(1)))
       .append("text")
       .attr("fill", "#000")
       .attr("x", 60)
@@ -144,8 +145,8 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="analyticsContainer">
     <h2>Applications Per Day</h2>
-    <svg></svg>
+    <svg ></svg>
   </div>
 </template>

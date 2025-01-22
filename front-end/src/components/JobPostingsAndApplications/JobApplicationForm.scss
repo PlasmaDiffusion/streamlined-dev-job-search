@@ -22,6 +22,9 @@ label {
   table {
     border-collapse: collapse;
   }
+
+    overflow-x: scroll;
+
 }
 
 form {
@@ -30,5 +33,22 @@ form {
 }
 
 .warning {
-  color:maroon;
+  color: maroon;
+}
+
+.mobileApplicationList {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .mobileApplicationList {
+    display: flex;
+  }
+
+  .applicationTable {
+    table {
+      display: block;
+      flex-direction: column;
+    }
+  }
 }

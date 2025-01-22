@@ -1,0 +1,9 @@
+.analyticsContainer {
+  overflow-x: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .analyticsContainer {
+    transform: scale(0.75);
+  }
+}
