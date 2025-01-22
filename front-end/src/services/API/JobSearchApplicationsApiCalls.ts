@@ -7,7 +7,7 @@ import { ApplicationFetchMethod, JobApplication } from "../../Interfaces";
 export async function fetchApplications(fetchBy: ApplicationFetchMethod) {
   let param = "";
 
-  console.log("fetching by",  fetchBy as ApplicationFetchMethod);
+  //console.log("fetching by",  fetchBy as ApplicationFetchMethod);
 
   if (fetchBy === ApplicationFetchMethod.THIS_MONTH) param += "/currentMonth";
   else if (fetchBy === ApplicationFetchMethod.THIS_YEAR) param += "/currentYear";

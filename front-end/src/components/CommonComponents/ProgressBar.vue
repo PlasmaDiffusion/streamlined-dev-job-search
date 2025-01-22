@@ -11,7 +11,6 @@ const props = defineProps<{
 import "./ProgressBar.scss";
 
 function getPercentageFilled() {
-  console.log(props.amount / props.maxAmount);
   return props.amount / props.maxAmount;
 }
 function getWidthFilled() {

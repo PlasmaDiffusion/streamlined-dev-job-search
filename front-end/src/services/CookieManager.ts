@@ -8,8 +8,8 @@ export function setCookie(cName: string, cValue: any, exDays: number = 400) {
   d.setTime(d.getTime() + exDays * 24 * 60 * 60 * 1000);
   let expires = "expires=" + d.toUTCString();
   document.cookie = cName + "=" + cValue + ";" + expires + ";path=/";
-  console.log("*value to save", cName + "=" + cValue + ";" + expires + ";path=/");
-  console.log("*cookie", document.cookie);
+  // console.log("*value to save", cName + "=" + cValue + ";" + expires + ";path=/");
+  // console.log("*cookie", document.cookie);
 
 }
 
