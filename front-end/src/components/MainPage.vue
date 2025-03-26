@@ -13,6 +13,7 @@ import { ApplicationFetchMethod, JobApplication } from "../Interfaces.ts";
 import { fetchApplications } from "../services/API/JobSearchApplicationsApiCalls.ts";
 import ListOfJobApplications from "./JobPostingsAndApplications/ListOfJobApplications.vue";
 import JobApplicationForm from "./JobPostingsAndApplications/JobApplicationForm.vue";
+import TagsGraph from "./Analytics/TagsGraph.vue";
 
 const helpChecked = ref(false);
 const loading = ref(true);
@@ -129,6 +130,10 @@ async function fetchData() {
       :fetchMethod="applicationFetchMethod"
     />
     <ApplicationsSentGraph
+      v-if="fetchedApplications.length > 0"
+      :applications="fetchedApplications"
+    />
+    <TagsGraph
       v-if="fetchedApplications.length > 0"
       :applications="fetchedApplications"
     />
