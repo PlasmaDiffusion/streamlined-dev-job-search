@@ -55,7 +55,8 @@ public class ParseJobPostingController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            Logger.Log(ex.ToString(), Logger.LogTypes.ERROR);
+            return StatusCode(500, new { error = "An unexpected error occurred." });
         }
     }
 }
