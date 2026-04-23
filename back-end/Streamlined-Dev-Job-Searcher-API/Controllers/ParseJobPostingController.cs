@@ -45,7 +45,8 @@ public class ParseJobPostingController : ControllerBase
             );
 
             var content = completion.Value.Content[0].Text;
-            var result = JsonDocument.Parse(content).RootElement;
+            using var document = JsonDocument.Parse(content);
+            var result = document.RootElement.Clone();
             return Ok(result);
         }
         catch (JsonException ex)
