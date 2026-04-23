@@ -13,9 +13,9 @@ public class ParseJobPostingController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Parse([FromBody] ParseJobPostingRequest request)
     {
-        var jobPosting = request.JobPosting.Trim();
+        var jobPosting = request.JobPosting?.Trim();
 
-        if (string.IsNullOrEmpty(jobPosting))
+        if (string.IsNullOrWhiteSpace(jobPosting))
             return BadRequest(new { error = "jobPosting is required." });
 
         var prompt = $$"""
