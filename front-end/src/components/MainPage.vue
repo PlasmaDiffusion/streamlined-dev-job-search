@@ -14,6 +14,7 @@ import { fetchApplications } from "../services/API/JobSearchApplicationsApiCalls
 import ListOfJobApplications from "./JobPostingsAndApplications/ListOfJobApplications.vue";
 import JobApplicationForm from "./JobPostingsAndApplications/JobApplicationForm.vue";
 import TagsGraph from "./Analytics/TagsGraph.vue";
+import ResumeCheck from "./ResumeCheck/ResumeCheck.vue";
 
 const helpChecked = ref(false);
 const loading = ref(true);
@@ -123,6 +124,8 @@ async function fetchData() {
         All Time
       </button>
     </div>
+
+    <ResumeCheck />
 
     <ListOfJobApplications
       :showHelp="helpChecked"

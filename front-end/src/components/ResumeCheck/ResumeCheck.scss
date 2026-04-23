@@ -1,0 +1,200 @@
+@import "../../variables.scss";
+
+.resumeCheck {
+  margin-top: 16px;
+  margin-right: 4px;
+  margin-left: 4px;
+  background-color: $background2;
+  border-radius: 4px;
+}
+
+.resumeCheckHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  padding: 0 1rem;
+
+  h2 {
+    flex: 1;
+    text-align: center;
+  }
+
+  .dropdownArrow {
+    font-size: 1.1rem;
+    color: white;
+    background-color: $primary;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.resumeCheckBody {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.resumeInputs {
+  display: flex;
+  gap: 1rem;
+
+  > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    b {
+      text-align: left;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    textarea {
+      flex: 1;
+      min-height: 160px;
+      width: 100%;
+      box-sizing: border-box;
+      resize: vertical;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.sliders {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+
+  .sliderGroup {
+    flex: 1;
+    min-width: 200px;
+    text-align: left;
+
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    .sliderDescription {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 2px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin-bottom: 0;
+      cursor: pointer;
+      accent-color: $primary;
+    }
+  }
+}
+
+.analyzeButton {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+
+  button {
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+.errorMessage {
+  color: maroon;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.results {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.resultBox {
+  flex: 1;
+  min-width: 280px;
+  background-color: $background;
+  border-radius: 4px;
+  padding: 1rem;
+  text-align: left;
+
+  h3 {
+    margin-top: 0;
+    text-align: center;
+    border-radius: 4px;
+    padding: 0.4rem;
+  }
+}
+
+.suggestionItem,
+.analysisItem {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 0.6rem 0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .originalText {
+    font-style: italic;
+    color: #444;
+    font-size: 0.88rem;
+    margin-bottom: 4px;
+  }
+
+  .suggestedText {
+    font-weight: bold;
+    color: $primary;
+  }
+
+  .proText {
+    color: #1a7a1a;
+    font-weight: bold;
+    margin-top: 4px;
+  }
+
+  .conText {
+    color: #b30000;
+    font-weight: bold;
+    margin-top: 2px;
+  }
+}
+
+.loadingText {
+  text-align: center;
+  font-style: italic;
+  padding: 1rem;
+  color: #555;
+}
+
+@media screen and (max-width: 768px) {
+  .resumeInputs {
+    flex-direction: column;
+  }
+
+  .results {
+    flex-direction: column;
+  }
+
+  .sliders {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
