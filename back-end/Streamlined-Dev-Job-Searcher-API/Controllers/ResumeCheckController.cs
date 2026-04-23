@@ -25,29 +25,29 @@ public class ResumeCheckController : ControllerBase
         var subtletyDesc = BuildSubtletyDesc(subtlety);
         var matchDesc = BuildMatchDesc(matchStrength);
 
-        var prompt = $"""
+        var prompt = $$"""
             You are an expert resume coach. Analyze each bullet point or sentence in the resume/looking-for-work ad below against the provided job posting.
 
             JOB POSTING:
-            {jobPosting}
+            {{jobPosting}}
 
             RESUME / LOOKING FOR WORK AD:
-            {resume}
+            {{resume}}
 
             TASK:
             For every distinct bullet point or sentence in the resume (split on newlines and sentence boundaries):
-            1. SUGGESTIONS: Provide a rewritten version. Changes should be {subtletyDesc}. The rewrite should {matchDesc}.
+            1. SUGGESTIONS: Provide a rewritten version. Changes should be {{subtletyDesc}}. The rewrite should {{matchDesc}}.
             2. ANALYSIS: State one specific pro (what already works well for this role) and one specific con (what weakens or misses the mark for this role).
 
             Return ONLY a valid JSON object — no markdown, no extra text — using this exact schema:
-            {{
+            {
               "suggestions": [
-                {{"original": "<exact original text>", "suggested": "<improved version>"}}
+                {"original": "<exact original text>", "suggested": "<improved version>"}
               ],
               "analysis": [
-                {{"original": "<exact original text>", "pro": "<what works>", "con": "<what needs improvement>"}}
+                {"original": "<exact original text>", "pro": "<what works>", "con": "<what needs improvement>"}
               ]
-            }}
+            }
 
             Include every bullet point or sentence from the resume. Keep "original" values verbatim.
             """;
@@ -65,7 +65,7 @@ public class ResumeCheckController : ControllerBase
                 new ChatCompletionOptions { ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat() }
             );
 
-            var content = completion.Content[0].Text;
+            var content = completion.Value.Content[0].Text;
             var result = JsonDocument.Parse(content).RootElement;
             return Ok(result);
         }
