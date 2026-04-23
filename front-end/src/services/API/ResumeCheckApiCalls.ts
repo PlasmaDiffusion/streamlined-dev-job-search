@@ -23,7 +23,7 @@ export async function checkResume(
   matchStrength: number
 ): Promise<ResumeCheckResult | null> {
   const response = await axios
-    .post(`${import.meta.env.VITE_RESUME_API_URL}/resume-check`, {
+    .post(`${import.meta.env.VITE_API_URL}/resume-check`, {
       resume,
       jobPosting,
       subtlety,

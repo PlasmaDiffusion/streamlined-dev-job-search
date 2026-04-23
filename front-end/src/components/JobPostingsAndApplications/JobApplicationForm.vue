@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   showHelp: { type: Boolean, required: true },
   applicationToEdit: { type: Object as () => JobApplication, required: false },
   previousApplications: {
@@ -8,7 +8,8 @@ defineProps({
   },
 });
 import "./JobApplicationForm.scss";
-import { parseJobPosting } from "../../services/ParseJobPosting";
+import { parseJobPostingTags } from "../../services/ParseJobPosting";
+import { parseJobPostingWithAI } from "../../services/API/ParseJobPostingApiCalls";
 import { ref } from "vue";
 import { JobApplication } from "../../Interfaces";
 import { createOrUpdateApplication } from "../../services/API/JobSearchApplicationsApiCalls";
@@ -20,6 +21,35 @@ const company = ref("");
 const tags = ref("");
 const applied = ref(true);
 const timesAlreadyApplied = ref(0);
+const parsingAI = ref(false);
+let parseRequestId = 0;
+
+//Detect tags as the user types or pastes in the job description
+function onJobDescriptionKeyup() {
+  if (!tags.value) tags.value = parseJobPostingTags(jobDescription.value);
+}
+
+//Detect job title and company when the user finishes pasting in the job description, but only if those fields aren't already filled out.
+//Use parseRequestId to ensure that if the user quickly changes and on focuses the job description text area multiple times, we only update the title and company based on the most recent version.
+async function onJobDescriptionBlur() {
+  const text = jobDescription.value.trim();
+  if (!text || (jobTitle.value && company.value)) return;
+
+  const requestId = ++parseRequestId;
+  parsingAI.value = true;
+  const parsed = await parseJobPostingWithAI(text);
+
+  if (requestId !== parseRequestId) return;
+  parsingAI.value = false;
+
+  if (parsed) {
+    if (!jobTitle.value) jobTitle.value = parsed.jobTitle;
+    if (!company.value) {
+      company.value = parsed.company;
+      updateTimesPreviouslyAppliedToSameCompany(parsed.company, props.previousApplications);
+    }
+  }
+}
 
 function submit(event: Event) {
   event.preventDefault();
@@ -59,23 +89,10 @@ function updateTimesPreviouslyAppliedToSameCompany(
       <textarea
         v-model="jobDescription"
         name="posting"
-        @keyup="
-          (event) => {
-            const { possibleTitle, possibleCompany, possibleTags } =
-              //@ts-ignore
-              parseJobPosting(event.target.value);
-            if (jobTitle === '') jobTitle = possibleTitle;
-            if (company === '') {
-              company = possibleCompany;
-              updateTimesPreviouslyAppliedToSameCompany(
-                company,
-                previousApplications
-              );
-            }
-            if (tags === '') tags = possibleTags.toString();
-          }
-        "
+        @keyup="onJobDescriptionKeyup"
+        @blur="onJobDescriptionBlur"
       ></textarea>
+      <p v-if="parsingAI" class="loadingText">Detecting job title and company...</p>
       <label class="help" v-if="showHelp"
         >^ Copy and paste the job posting for it to be stored plus tagged and
         ranked for how good a fit it would be.</label
