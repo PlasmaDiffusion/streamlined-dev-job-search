@@ -6,7 +6,7 @@ using Streamlined_Dev_Job_Searcher_API.Models;
 
 namespace Streamlined_Dev_Job_Searcher_API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/resume-check")]
 [ApiController]
 public class ResumeCheckController : ControllerBase
 {
