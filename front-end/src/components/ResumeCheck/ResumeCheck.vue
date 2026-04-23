@@ -27,16 +27,24 @@ const matchLabel = computed(() => {
   return "Exact Match";
 });
 
+const bothProvided = computed(
+  () => !!resume.value.trim() && !!jobPosting.value.trim()
+);
+
+const loadingText = computed(() => {
+  const takeAMomentText = "This may take a moment...";
+  if (resume.value.trim() && jobPosting.value.trim())
+    return "Analyzing your resume against the job posting..." + takeAMomentText;
+  if (resume.value.trim()) return "Analyzing your resume..." + takeAMomentText;
+  return "Analyzing the job posting..." + takeAMomentText;
+});
+
 async function analyze() {
   error.value = "";
   result.value = null;
 
-  if (!resume.value.trim()) {
-    error.value = "Please paste your resume or looking-for-work ad.";
-    return;
-  }
-  if (!jobPosting.value.trim()) {
-    error.value = "Please paste the job posting.";
+  if (!resume.value.trim() && !jobPosting.value.trim()) {
+    error.value = "Please paste your resume, job posting, or both.";
     return;
   }
 
@@ -91,7 +99,7 @@ async function analyze() {
             Subtle (minimal tweaks) ←→ Bold (full rewrite)
           </div>
         </div>
-        <div class="sliderGroup">
+        <div v-if="bothProvided" class="sliderGroup">
           <label>Job Match Strength: {{ matchLabel }}</label>
           <input type="range" min="0" max="100" v-model="matchStrength" />
           <div class="sliderDescription">
@@ -102,15 +110,13 @@ async function analyze() {
 
       <div class="analyzeButton">
         <button @click="analyze" :disabled="loading">
-          {{ loading ? "Analyzing..." : "Analyze Resume" }}
+          {{ loading ? "Analyzing..." : "Analyze Resume / Job Posting / Looking For Work Ad" }}
         </button>
       </div>
 
       <p v-if="error" class="errorMessage">{{ error }}</p>
 
-      <p v-if="loading" class="loadingText">
-        Analyzing your resume against the job posting...
-      </p>
+      <p v-if="loading" class="loadingText">{{ loadingText }}</p>
 
       <div v-if="result" class="results">
         <div class="resultBox">
