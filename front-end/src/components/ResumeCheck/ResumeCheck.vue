@@ -51,7 +51,7 @@ async function analyze() {
 
   if (!data) {
     error.value =
-      "Failed to reach the resume service. Make sure the Flask backend is running on port 5001.";
+      "Failed to reach the resume service. Make sure the .NET backend is running on port 5094.";
     return;
   }
   result.value = data;

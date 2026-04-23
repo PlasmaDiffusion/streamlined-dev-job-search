@@ -60,3 +60,4 @@ msbuild.wrn
 back-end/Streamlined-Dev-Job-Searcher-API/secrets.json
 
 back-end/Streamlined-Dev-Job-Searcher-API/Properties/launchSettings.json
+front-end/.env
