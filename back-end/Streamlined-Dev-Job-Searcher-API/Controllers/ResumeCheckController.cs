@@ -32,14 +32,15 @@ public class ResumeCheckController : ControllerBase
         ? $$"""
                 You are an expert resume coach. Analyze each bullet point or sentence in the resume/looking-for-work ad below against the provided job posting.
 
-                JOB POSTING:
+                <job_posting>
                 {{jobPosting}}
+                </job_posting>
 
-                RESUME / LOOKING FOR WORK AD:
+                <resume>
                 {{resume}}
+                </resume>
 
-                TASK:
-                For every distinct bullet point or sentence in the resume (split on newlines and sentence boundaries):
+                For every distinct bullet point or sentence inside the <resume> tags (split on newlines and sentence boundaries):
                 1. SUGGESTIONS: Provide a rewritten version. Changes should be {{subtletyDesc}}. The rewrite should {{matchDesc}}.
                 2. ANALYSIS: State one specific pro (what already works well for this role) and one specific con (what weakens or misses the mark for this role).
 
@@ -59,11 +60,11 @@ public class ResumeCheckController : ControllerBase
         ? $$"""
                 You are an expert resume coach. Analyze each bullet point or sentence in the resume/looking-for-work ad below for general quality, clarity, and impact — there is no specific job posting to match against.
 
-                RESUME / LOOKING FOR WORK AD:
+                <resume>
                 {{resume}}
+                </resume>
 
-                TASK:
-                For every distinct bullet point or sentence in the resume (split on newlines and sentence boundaries):
+                For every distinct bullet point or sentence inside the <resume> tags (split on newlines and sentence boundaries):
                 1. SUGGESTIONS: Provide a rewritten version. Changes should be {{subtletyDesc}}. Focus on improving clarity, impact, and professional tone.
                 2. ANALYSIS: State one specific pro (what already works well) and one specific con (what could be stronger).
 
@@ -82,11 +83,11 @@ public class ResumeCheckController : ControllerBase
         : $$"""
                 You are an expert recruiter and job posting analyst. Analyze each bullet point or sentence in the job posting below for clarity, appeal to candidates, and effectiveness.
 
-                JOB POSTING:
+                <job_posting>
                 {{jobPosting}}
+                </job_posting>
 
-                TASK:
-                For every distinct bullet point or sentence in the job posting (split on newlines and sentence boundaries):
+                For every distinct bullet point or sentence inside the <job_posting> tags (split on newlines and sentence boundaries):
                 1. SUGGESTIONS: Provide a rewritten version. Changes should be {{subtletyDesc}}. Focus on making the posting more attractive, clear, and inclusive.
                 2. ANALYSIS: State one specific pro (what already works well) and one specific con (what could deter good candidates or be clearer).
 
