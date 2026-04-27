@@ -10,26 +10,26 @@ namespace Streamlined_Dev_Job_Searcher_API.Controllers;
 [ApiController]
 public class ResumeCheckController : ControllerBase
 {
-    [HttpPost]
-    public async Task<IActionResult> Check([FromBody] ResumeCheckRequest request)
-    {
-        var resume = request.Resume.Trim();
-        var jobPosting = request.JobPosting.Trim();
+  [HttpPost]
+  public async Task<IActionResult> Check([FromBody] ResumeCheckRequest request)
+  {
+    var resume = request.Resume.Trim();
+    var jobPosting = request.JobPosting.Trim();
 
-        var hasResume = !string.IsNullOrEmpty(resume);
-        var hasJobPosting = !string.IsNullOrEmpty(jobPosting);
+    var hasResume = !string.IsNullOrEmpty(resume);
+    var hasJobPosting = !string.IsNullOrEmpty(jobPosting);
 
-        if (!hasResume && !hasJobPosting)
-            return BadRequest(new { error = "At least one of resume or jobPosting is required." });
+    if (!hasResume && !hasJobPosting)
+      return BadRequest(new { error = "At least one of resume or jobPosting is required." });
 
-        var subtlety = Math.Clamp(request.Subtlety, 0f, 1f);
-        var matchStrength = Math.Clamp(request.MatchStrength, 0f, 1f);
+    var subtlety = Math.Clamp(request.Subtlety, 0f, 1f);
+    var matchStrength = Math.Clamp(request.MatchStrength, 0f, 1f);
 
-        var subtletyDesc = BuildSubtletyDesc(subtlety);
-        var matchDesc = BuildMatchDesc(matchStrength);
+    var subtletyDesc = BuildSubtletyDesc(subtlety);
+    var matchDesc = BuildMatchDesc(matchStrength);
 
-        var prompt = (hasResume && hasJobPosting)
-            ? $$"""
+    var prompt = (hasResume && hasJobPosting)
+        ? $$"""
                 You are an expert resume coach. Analyze each bullet point or sentence in the resume/looking-for-work ad below against the provided job posting.
 
                 JOB POSTING:
@@ -55,8 +55,8 @@ public class ResumeCheckController : ControllerBase
 
                 Include every bullet point or sentence from the resume. Keep "original" values verbatim.
                 """
-            : hasResume
-            ? $$"""
+        : hasResume
+        ? $$"""
                 You are an expert resume coach. Analyze each bullet point or sentence in the resume/looking-for-work ad below for general quality, clarity, and impact — there is no specific job posting to match against.
 
                 RESUME / LOOKING FOR WORK AD:
@@ -79,7 +79,7 @@ public class ResumeCheckController : ControllerBase
 
                 Include every bullet point or sentence from the resume. Keep "original" values verbatim.
                 """
-            : $$"""
+        : $$"""
                 You are an expert recruiter and job posting analyst. Analyze each bullet point or sentence in the job posting below for clarity, appeal to candidates, and effectiveness.
 
                 JOB POSTING:
@@ -103,44 +103,54 @@ public class ResumeCheckController : ControllerBase
                 Include every bullet point or sentence from the job posting. Keep "original" values verbatim.
                 """;
 
-        try
-        {
-            var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-                ?? throw new InvalidOperationException("OPENAI_API_KEY environment variable is not set.");
+    try
+    {
+      var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+          ?? throw new InvalidOperationException("OPENAI_API_KEY environment variable is not set.");
 
-            var client = new OpenAIClient(apiKey);
-            var chatClient = client.GetChatClient("gpt-5-nano");
+      var client = new OpenAIClient(apiKey);
+      var chatClient = client.GetChatClient("gpt-5-nano");
+      /*
+        Streaming is required here because Heroku enforces a 30-second request timeout (H12 error).
+        If we awaited the full OpenAI response before sending anything, long prompts would exceed that limit
+        By streaming, we start flushing data immediately, keeping the connection alive.
+      */
+      Response.Headers["Content-Type"] = "text/event-stream";
+      Response.Headers["Cache-Control"] = "no-cache";
+      Response.Headers["X-Accel-Buffering"] = "no";
 
-            var completion = await chatClient.CompleteChatAsync(
-                [new UserChatMessage(prompt)],
-                new ChatCompletionOptions { ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat() }
-            );
+      await foreach (var update in chatClient.CompleteChatStreamingAsync(
+          [new UserChatMessage(prompt)],
+          new ChatCompletionOptions { ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat() }))
+      {
+        foreach (var part in update.ContentUpdate)
+        {
+          await Response.WriteAsync($"data: {part.Text}\n\n");
+          await Response.Body.FlushAsync();
+        }
+      }
 
-            var content = completion.Value.Content[0].Text;
-            var result = JsonDocument.Parse(content).RootElement;
-            return Ok(result);
-        }
-        catch (JsonException ex)
-        {
-            return StatusCode(500, new { error = $"Failed to parse AI response: {ex.Message}" });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { error = ex.Message });
-        }
+      await Response.WriteAsync("data: [DONE]\n\n");
+      await Response.Body.FlushAsync();
+      return new EmptyResult();
     }
-
-    private static string BuildSubtletyDesc(float subtlety) => subtlety switch
+    catch (Exception ex)
     {
-        < 0.33f => "very subtle and minimal — only lightly adjust wording, keeping the original voice intact",
-        < 0.67f => "moderately bold — improve clarity and relevance while preserving most of the original phrasing",
-        _ => "bold and significant — rewrite freely for maximum impact, changing structure and wording as needed"
-    };
+      return StatusCode(500, new { error = ex.Message });
+    }
+  }
 
-    private static string BuildMatchDesc(float matchStrength) => matchStrength switch
-    {
-        < 0.33f => "focus on general writing quality improvements without specifically mirroring the job posting",
-        < 0.67f => "moderately align with the job posting's requirements and preferred terminology",
-        _ => "closely mirror the exact keywords, technologies, and requirements stated in the job posting"
-    };
+  private static string BuildSubtletyDesc(float subtlety) => subtlety switch
+  {
+    < 0.33f => "very subtle and minimal — only lightly adjust wording, keeping the original voice intact",
+    < 0.67f => "moderately bold — improve clarity and relevance while preserving most of the original phrasing",
+    _ => "bold and significant — rewrite freely for maximum impact, changing structure and wording as needed"
+  };
+
+  private static string BuildMatchDesc(float matchStrength) => matchStrength switch
+  {
+    < 0.33f => "focus on general writing quality improvements without specifically mirroring the job posting",
+    < 0.67f => "moderately align with the job posting's requirements and preferred terminology",
+    _ => "closely mirror the exact keywords, technologies, and requirements stated in the job posting"
+  };
 }
