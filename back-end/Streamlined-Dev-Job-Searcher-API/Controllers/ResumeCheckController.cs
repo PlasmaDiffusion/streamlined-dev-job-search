@@ -119,6 +119,15 @@ public class ResumeCheckController : ControllerBase
       Response.Headers["Cache-Control"] = "no-cache";
       Response.Headers["X-Accel-Buffering"] = "no";
 
+      // Disable response buffering so chunks are sent to the client immediately
+      var bufferingFeature = HttpContext.Features.Get<Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature>();
+      bufferingFeature?.DisableBuffering();
+
+      // Send a heartbeat comment immediately so Heroku's 30s timeout clock is reset
+      // before the OpenAI call begins. Without this, a slow first token would still trigger H12.
+      await Response.WriteAsync(": heartbeat\n\n");
+      await Response.Body.FlushAsync();
+
       await foreach (var update in chatClient.CompleteChatStreamingAsync(
           [new UserChatMessage(prompt)],
           new ChatCompletionOptions { ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat() }))
