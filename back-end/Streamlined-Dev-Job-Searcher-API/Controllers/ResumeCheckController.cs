@@ -123,10 +123,19 @@ public class ResumeCheckController : ControllerBase
       var bufferingFeature = HttpContext.Features.Get<Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature>();
       bufferingFeature?.DisableBuffering();
 
-      // Send a heartbeat comment immediately so Heroku's 30s timeout clock is reset
-      // before the OpenAI call begins. Without this, a slow first token would still trigger H12.
-      await Response.WriteAsync(": heartbeat\n\n");
-      await Response.Body.FlushAsync();
+      // Send a heartbeat immediately and then every 20s while OpenAI is working.
+      // Heroku kills connections idle for 30s (H12) or 55s (H15), so we must keep
+      // flushing data. SSE comment lines (starting with ':') are ignored by clients.
+      using var heartbeatCts = new CancellationTokenSource();
+      var heartbeatTask = Task.Run(async () =>
+      {
+        while (!heartbeatCts.Token.IsCancellationRequested)
+        {
+          await Response.WriteAsync(": heartbeat\n\n");
+          await Response.Body.FlushAsync();
+          await Task.Delay(TimeSpan.FromSeconds(20), heartbeatCts.Token).ContinueWith(_ => { });
+        }
+      });
 
       await foreach (var update in chatClient.CompleteChatStreamingAsync(
           [new UserChatMessage(prompt)],
@@ -138,6 +147,9 @@ public class ResumeCheckController : ControllerBase
           await Response.Body.FlushAsync();
         }
       }
+
+      await heartbeatCts.CancelAsync();
+      await heartbeatTask;
 
       await Response.WriteAsync("data: [DONE]\n\n");
       await Response.Body.FlushAsync();
