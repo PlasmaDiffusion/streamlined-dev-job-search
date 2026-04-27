@@ -110,28 +110,24 @@ public class ResumeCheckController : ControllerBase
 
       var client = new OpenAIClient(apiKey);
       var chatClient = client.GetChatClient("gpt-5-nano");
-      /*
-        Streaming is required here because Heroku enforces a 30-second request timeout (H12 error).
-        If we awaited the full OpenAI response before sending anything, long prompts would exceed that limit
-        By streaming, we start flushing data immediately, keeping the connection alive.
-      */
-      Response.Headers["Content-Type"] = "text/event-stream";
+      // Streaming is required because Heroku enforces a 30-second idle timeout (H12/H15).
+      // We stream raw JSON text — spaces are valid JSON whitespace so we use them as heartbeats
+      // to keep the connection alive before OpenAI starts returning tokens.
+      // The frontend reads the full response body and parses it as JSON once complete.
+      Response.Headers["Content-Type"] = "application/json";
       Response.Headers["Cache-Control"] = "no-cache";
       Response.Headers["X-Accel-Buffering"] = "no";
 
-      // Disable response buffering so chunks are sent to the client immediately
       var bufferingFeature = HttpContext.Features.Get<Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature>();
       bufferingFeature?.DisableBuffering();
 
-      // Send a heartbeat immediately and then every 20s while OpenAI is working.
-      // Heroku kills connections idle for 30s (H12) or 55s (H15), so we must keep
-      // flushing data. SSE comment lines (starting with ':') are ignored by clients.
+      // Send spaces immediately and every 20s as heartbeats — spaces are ignored by JSON parsers
       using var heartbeatCts = new CancellationTokenSource();
       var heartbeatTask = Task.Run(async () =>
       {
         while (!heartbeatCts.Token.IsCancellationRequested)
         {
-          await Response.WriteAsync(": heartbeat\n\n");
+          await Response.WriteAsync(" ");
           await Response.Body.FlushAsync();
           await Task.Delay(TimeSpan.FromSeconds(20), heartbeatCts.Token).ContinueWith(_ => { });
         }
@@ -143,16 +139,13 @@ public class ResumeCheckController : ControllerBase
       {
         foreach (var part in update.ContentUpdate)
         {
-          await Response.WriteAsync($"data: {part.Text}\n\n");
+          await Response.WriteAsync(part.Text);
           await Response.Body.FlushAsync();
         }
       }
 
       await heartbeatCts.CancelAsync();
       await heartbeatTask;
-
-      await Response.WriteAsync("data: [DONE]\n\n");
-      await Response.Body.FlushAsync();
       return new EmptyResult();
     }
     catch (Exception ex)
